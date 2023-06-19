@@ -8,6 +8,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
 
+import java.util.List;
+
 import static org.junit.Assert.assertTrue;
 
 public class CommandTests {
@@ -22,6 +24,7 @@ public class CommandTests {
             server = MockBukkit.mock();
             curiosityCore = MockBukkit.load(TheCuriosityCore.class);
             player = server.addPlayer("Player1");
+
         }
 
         @AfterEach
@@ -32,9 +35,10 @@ public class CommandTests {
         @Test
         public void testGreetCommand() {
 
-
-            boolean result = player.performCommand("messages greet ");
-
+            String commandWrote = "messages greet ";
+            boolean result = player.performCommand(commandWrote);
+            // TODO: Below there is the command for tab completes
+            //List<String> tabs = server.getCommandTabComplete(player,commandWrote);
 
             assertTrue(result);
             assertTrue(player.nextMessage().contains("Hello, " + player.getName()));
@@ -44,6 +48,7 @@ public class CommandTests {
         public void testSayGoodbyeCommand() {
 
             boolean result = player.performCommand("messages greet goodbye");
+
 
 
             assertTrue(result);

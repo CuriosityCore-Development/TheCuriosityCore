@@ -12,6 +12,7 @@ public class SalutationsCommand extends CommandExecuteable {
         if(sender instanceof Player){
             Player player = (Player) sender;
             player.sendMessage("Salutations, " + player.getName() + "!");
+
         }
     }
 
