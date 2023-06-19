@@ -1,12 +1,18 @@
 package io.curiositycore.thecuriositycore.commands;
 
+import lombok.Getter;
 import org.bukkit.command.CommandSender;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Getter
 /**
  * Abstract to the define the generalisation of any command executed within a Curiosity Core <code>Plugin</code>. Each
  * child class of this Abstract must have their own constructor to define the <code>fields</code>
  */
-public abstract class ExecutableCommand {
+public abstract class CommandExecuteable {
 
     /**
      * The name of the <code>SubCommand</code>, as a <code>String</code>.
@@ -20,11 +26,13 @@ public abstract class ExecutableCommand {
      * The syntax to use when executing a command that includes this <code>SubCommand</code>, as a <code>String</code>.
      */
     protected final String syntax;
+    protected Map<String, CommandExecuteable> subCommands = new HashMap<>();
+
 
     /**
      * Constructor that initializes the command's descriptive fields.
      */
-    public ExecutableCommand(){
+    public CommandExecuteable(){
         this.name = initName();
         this.description = initDescription();
         this.syntax = initSyntax();
@@ -38,25 +46,22 @@ public abstract class ExecutableCommand {
      */
     public abstract void perform(CommandSender sender,String[] commandArguments);
     /**
-     * Getter for the <code>name</code> of the command.
-     * @return the name of the command.
+     * Add a sub-command to this command.
+     *
+     * @param command the sub-command to be added
      */
-    public String getName() {
-        return name;
+    public void addSubCommand(CommandExecuteable command) {
+        subCommands.put(command.getName(), command);
     }
+
     /**
-     * Getter for the <code>description</code> of the command.
-     * @return the description of the command.
+     * Get a sub-command based on its name.
+     *
+     * @param commandName the name of the command
+     * @return the CommandExecuteable instance or null if it doesn't exist
      */
-    public String getDescription() {
-        return description;
-    }
-    /**
-     * Getter for the <code>syntax</code> of the inputs to execute the command.
-     * @return the syntax used when executing the command.
-     */
-    public String getSyntax() {
-        return syntax;
+    public CommandExecuteable getSubCommand(String commandName) {
+        return subCommands.get(commandName);
     }
 
     /**
@@ -74,5 +79,7 @@ public abstract class ExecutableCommand {
      * @return the syntax used when executing the command.
      */
     protected abstract String initSyntax();
+
+    protected abstract List<String> getTabCompletesForCommand(String[] arguments);
 
 }
