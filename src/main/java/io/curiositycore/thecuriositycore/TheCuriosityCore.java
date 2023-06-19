@@ -1,6 +1,6 @@
 package io.curiositycore.thecuriositycore;
 
-import io.curiositycore.thecuriositycore.testclasses.testCommand.GreetingsCommand;
+import io.curiositycore.thecuriositycore.testclasses.testCommand.PrimaryPrimaryCommandAManager;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -32,7 +32,7 @@ public final class TheCuriosityCore extends JavaPlugin {
     @Override
     public void onEnable() {
         //this.adventure = adventure();
-        this.getCommand("messages").setExecutor(new GreetingsCommand());
+        this.getCommand("primary_command_a").setExecutor(new PrimaryPrimaryCommandAManager());
     }
 
     @Override

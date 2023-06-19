@@ -1,4 +1,4 @@
-package io.curiositycore.thecuriositycore.commands;
+package io.curiositycore.thecuriositycore.commands.interfaces.executables;
 
 import lombok.Getter;
 import org.bukkit.command.CommandSender;
@@ -9,10 +9,11 @@ import java.util.Map;
 
 @Getter
 /**
- * Abstract to the define the generalisation of any command executed within a Curiosity Core <code>Plugin</code>. Each
- * child class of this Abstract must have their own constructor to define the <code>fields</code>
+ * Abstract to the define the generalisation of any executeable within a command within a Curiosity Core
+ * <code>Plugin</code>. This generalisation applies to any type of command executeable (including sub-executeables).<br>
+ *  * <i>(Supplementary interfaces can be utilised to add additional functionality to these executables)</i>
  */
-public abstract class CommandExecuteable {
+public abstract class CommandExecutable {
 
     /**
      * The name of the <code>SubCommand</code>, as a <code>String</code>.
@@ -26,13 +27,17 @@ public abstract class CommandExecuteable {
      * The syntax to use when executing a command that includes this <code>SubCommand</code>, as a <code>String</code>.
      */
     protected final String syntax;
-    protected Map<String, CommandExecuteable> subCommands = new HashMap<>();
+
+    /**
+     * Map containing key-value pairs of sub-command executable names and sub-command executables respectively.
+     */
+    protected Map<String, CommandExecutable> subCommands = new HashMap<>();
 
 
     /**
      * Constructor that initializes the command's descriptive fields.
      */
-    public CommandExecuteable(){
+    public CommandExecutable(){
         this.name = initName();
         this.description = initDescription();
         this.syntax = initSyntax();
@@ -46,22 +51,22 @@ public abstract class CommandExecuteable {
      */
     public abstract void perform(CommandSender sender,String[] commandArguments);
     /**
-     * Add a sub-command to this command.
+     * Add a sub-subCommandExecutable to this subCommandExecutable.
      *
-     * @param command the sub-command to be added
+     * @param subCommandExecutable the sub-subCommandExecutable to be added
      */
-    public void addSubCommand(CommandExecuteable command) {
-        subCommands.put(command.getName(), command);
+    public void addSubCommand(CommandExecutable subCommandExecutable) {
+        subCommands.put(subCommandExecutable.getName(), subCommandExecutable);
     }
 
     /**
      * Get a sub-command based on its name.
      *
-     * @param commandName the name of the command
+     * @param subCommandExecutableName the name of the command
      * @return the CommandExecuteable instance or null if it doesn't exist
      */
-    public CommandExecuteable getSubCommand(String commandName) {
-        return subCommands.get(commandName);
+    public CommandExecutable getSubCommand(String subCommandExecutableName) {
+        return subCommands.get(subCommandExecutableName);
     }
 
     /**
@@ -80,6 +85,12 @@ public abstract class CommandExecuteable {
      */
     protected abstract String initSyntax();
 
-    protected abstract List<String> getTabCompletesForCommand(String[] arguments);
+    /**
+     * Abstract method that defines the generalisation of getting the tab completer for this particular command
+     * executable. This allows for more dynamic tab-completes for complex commands with multiple sub-command executables.
+     * @param arguments The arguments of the command that executed this command executable.
+     * @return The tab completer for this particular executable.
+     */
+    public abstract List<String> getTabCompletesForCommand(String[] arguments);
 
 }

@@ -1,38 +1,38 @@
 package io.curiositycore.thecuriositycore.testclasses.testCommand.subs;
 
-import io.curiositycore.thecuriositycore.commands.CommandExecuteable;
+import io.curiositycore.thecuriositycore.commands.interfaces.executables.CommandExecutable;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class SalutationsCommand extends CommandExecuteable {
+public class SubExecutableA extends CommandExecutable {
     @Override
     public void perform(CommandSender sender, String[] commandArguments) {
         if(sender instanceof Player){
             Player player = (Player) sender;
-            player.sendMessage("Salutations, " + player.getName() + "!");
+            player.sendMessage("Sub-Executable-A executed via command by " + player.getName() + "!");
 
         }
     }
 
     @Override
     protected String initName() {
-        return "salutations";
+        return "sub_executable_a";
     }
 
     @Override
     protected String initDescription() {
-        return "Says salutations";
+        return "Is the first sub executeable";
     }
 
     @Override
     protected String initSyntax() {
-        return null;
+        return "/PrimaryCommand PrimaryExecutableA SubExecutableA args";
     }
 
     @Override
-    protected List<String> getTabCompletesForCommand(String[] arguments) {
+    public List<String> getTabCompletesForCommand(String[] arguments) {
         return null;
     }
 }
