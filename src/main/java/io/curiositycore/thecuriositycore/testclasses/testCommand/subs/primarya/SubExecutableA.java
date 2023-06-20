@@ -1,12 +1,14 @@
-package io.curiositycore.thecuriositycore.testclasses.testCommand.subs;
+package io.curiositycore.thecuriositycore.testclasses.testCommand.subs.primarya;
 
 import io.curiositycore.thecuriositycore.commands.interfaces.executables.CommandExecutable;
+
+import java.util.Collections;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class SubExecutableA extends CommandExecutable {
+public class SubExecutableA extends CommandExecutable{
     @Override
     public void perform(CommandSender sender, String[] commandArguments) {
         if(sender instanceof Player){
@@ -32,7 +34,7 @@ public class SubExecutableA extends CommandExecutable {
     }
 
     @Override
-    public List<String> getTabCompletesForCommand(String[] arguments) {
-        return null;
+    protected List<String> determineTabCompletes(String[] arguments) {
+        return Collections.emptyList();
     }
 }

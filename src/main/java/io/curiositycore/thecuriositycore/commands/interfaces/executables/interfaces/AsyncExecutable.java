@@ -1,4 +1,8 @@
 package io.curiositycore.thecuriositycore.commands.interfaces.executables.interfaces;
 
-public interface AsyncCommand {
+public interface AsyncExecutable {
+    default void runAsyncTask() {
+
+    }
 }
+

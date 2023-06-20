@@ -7,10 +7,8 @@ import org.bukkit.command.TabExecutor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 /**
  * Abstract to the define the generalisation of any manager for a group of <code>CommandExecutable</code> instances.
  * This class should be treated as a typical <code>TabExecutor</code> (i.e. registered on enable as a primary command).
@@ -18,7 +16,7 @@ import java.util.Map;
 public abstract class PrimaryCommandManager implements TabExecutor {
 
     /**
-     * Map containing key-value pairs of command executeable names and command executables respectively.
+     * Map containing key-value pairs of command executable names and command executables respectively.
      */
     protected Map<String, CommandExecutable> commandMap = new HashMap<>();
 
@@ -49,18 +47,24 @@ public abstract class PrimaryCommandManager implements TabExecutor {
     }
 
 
-    @Nullable
+
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        List<String> tabsToReturn = new ArrayList<>();
+
         if(args.length == 1){
             return this.commandMap.keySet().stream().toList();
         }
 
         if(!this.commandMap.containsKey(args[0])){
-            return null;
+            return Collections.emptyList();
         }
 
-        return this.commandMap.get(args[0]).getTabCompletesForCommand(args);
+
+            tabsToReturn.addAll(this.commandMap.get(args[0]).getTabCompletesForCommand(args));
+            return tabsToReturn;
+
+
     }
     protected CommandExecutable getCommand(String commandName){
         return this.commandMap.get(commandName);
