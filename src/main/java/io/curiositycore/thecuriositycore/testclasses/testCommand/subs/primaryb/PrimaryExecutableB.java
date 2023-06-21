@@ -1,10 +1,8 @@
 package io.curiositycore.thecuriositycore.testclasses.testCommand.subs.primaryb;
 
-import io.curiositycore.thecuriositycore.commands.interfaces.executables.CommandExecutable;
+import io.curiositycore.thecuriositycore.commands.executables.CommandExecutable;
 import java.util.Collections;
 
-import io.curiositycore.thecuriositycore.testclasses.testCommand.subs.primarya.SubExecutableA;
-import io.curiositycore.thecuriositycore.testclasses.testCommand.subs.primarya.SubExecutableB;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

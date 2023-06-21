@@ -1,4 +1,4 @@
-package io.curiositycore.thecuriositycore.commands.interfaces.executables;
+package io.curiositycore.thecuriositycore.commands.executables;
 
 import lombok.Getter;
 import org.bukkit.command.CommandSender;

@@ -1,6 +1,6 @@
 package io.curiositycore.thecuriositycore.testclasses.testCommand.subs.primarya;
 
-import io.curiositycore.thecuriositycore.commands.interfaces.executables.CommandExecutable;
+import io.curiositycore.thecuriositycore.commands.executables.CommandExecutable;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

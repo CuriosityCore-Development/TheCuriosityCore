@@ -1,11 +1,10 @@
-package io.curiositycore.thecuriositycore.commands.interfaces.managers;
+package io.curiositycore.thecuriositycore.commands.managers;
 
-import io.curiositycore.thecuriositycore.commands.interfaces.executables.CommandExecutable;
+import io.curiositycore.thecuriositycore.commands.executables.CommandExecutable;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 

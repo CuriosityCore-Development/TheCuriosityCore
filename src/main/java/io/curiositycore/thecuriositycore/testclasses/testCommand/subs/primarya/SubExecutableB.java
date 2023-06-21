@@ -1,6 +1,6 @@
 package io.curiositycore.thecuriositycore.testclasses.testCommand.subs.primarya;
 
-import io.curiositycore.thecuriositycore.commands.interfaces.executables.CommandExecutable;
+import io.curiositycore.thecuriositycore.commands.executables.CommandExecutable;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -15,7 +15,6 @@ public class SubExecutableB extends CommandExecutable{
             player.sendMessage("Sub-Executable-B executed via command by " + player.getName() + "!");
         }
     }
-
     @Override
     protected String initName() {
         return "sub_executable_b";
@@ -30,8 +29,6 @@ public class SubExecutableB extends CommandExecutable{
     protected String initSyntax() {
         return "/PrimaryCommand PrimaryExecutableA SubExecutableB args";
     }
-
-
 
     @Override
     protected List<String> determineTabCompletes(String[] arguments) {
