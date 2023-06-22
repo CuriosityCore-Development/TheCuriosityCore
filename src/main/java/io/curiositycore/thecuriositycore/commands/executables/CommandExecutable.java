@@ -4,13 +4,12 @@ import lombok.Getter;
 import org.bukkit.command.CommandSender;
 
 import java.util.*;
-
-@Getter
 /**
  * Abstract to the define the generalisation of any executeable within a command within a Curiosity Core
  * <code>Plugin</code>. This generalisation applies to any type of command executeable (including sub-executeables).<br>
  *  * <i>(Supplementary interfaces can be utilised to add additional functionality to these executables)</i>
  */
+@Getter
 public abstract class CommandExecutable {
 
     /**
@@ -35,7 +34,7 @@ public abstract class CommandExecutable {
     /**
      * Constructor that initializes the command's descriptive fields.
      */
-    public CommandExecutable(){
+    protected CommandExecutable(){
         this.name = initName();
         this.description = initDescription();
         this.syntax = initSyntax();
@@ -119,10 +118,8 @@ public abstract class CommandExecutable {
     protected String[] initTrueExecutableArgs(String[] arguments){
         boolean indexFound = false;
         List<String> argsToReturn = new ArrayList<>();
-        ListIterator<String> argumentIterator = Arrays.stream(arguments).toList().listIterator();
-        while(argumentIterator.hasNext()){
-            String currentArgument = argumentIterator.next();
-            if(indexFound || currentArgument.contains(this.name)){
+        for (String currentArgument : Arrays.stream(arguments).toList()) {
+            if (indexFound || currentArgument.contains(this.name)) {
                 indexFound = true;
                 argsToReturn.add(currentArgument);
 

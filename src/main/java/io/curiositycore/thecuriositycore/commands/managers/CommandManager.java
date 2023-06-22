@@ -1,6 +1,7 @@
 package io.curiositycore.thecuriositycore.commands.managers;
 
 import io.curiositycore.thecuriositycore.commands.executables.CommandExecutable;
+import io.curiositycore.thecuriositycore.commands.inputs.CommandInputs;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -12,16 +13,23 @@ import java.util.*;
  * Abstract to the define the generalisation of any manager for a group of <code>CommandExecutable</code> instances.
  * This class should be treated as a typical <code>TabExecutor</code> (i.e. registered on enable as a primary command).
  */
-public abstract class PrimaryCommandManager implements TabExecutor {
+public abstract class CommandManager implements TabExecutor {
 
     /**
      * Map containing key-value pairs of command executable names and command executables respectively.
      */
     protected Map<String, CommandExecutable> commandMap = new HashMap<>();
-
+    protected CommandInputs commandInputs;
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        //Unsure if useful long term
+        this.commandInputs = new CommandInputs(sender,command,label,args);
+
+        if(!preCommandTests()){
+            return false;
+        }
+
         if(!this.commandMap.containsKey(args[0])){
             return false;
         }
@@ -68,7 +76,7 @@ public abstract class PrimaryCommandManager implements TabExecutor {
     protected CommandExecutable getCommand(String commandName){
         return this.commandMap.get(commandName);
     }
-    //TODO Just because bukkit does it, doesnt mean its right, make a class to store the many parameters of command.
+    //TODO The CommandInputs class can be used to streamline this, and executables.
     /**
      * Attempts to execute the potential sub-command-executable that has been called.
      * @param sender Sender of the command that the sub-command is a part of.
@@ -92,9 +100,12 @@ public abstract class PrimaryCommandManager implements TabExecutor {
     }
 
     /**
-     * An abstract method that defines any tests that require conducting before execution of the
+     * Method that defines any tests that require conducting before execution of the command. By default it is true, but
+     * can be overwritten in child classes to allow for functionality.
      * <code>CommandExecutable</code>
      * @return The boolean representing the success or failure of the checks.
      */
-    protected abstract boolean preCommandTests();
+    protected boolean preCommandTests(){
+        return true;
+    }
 }
