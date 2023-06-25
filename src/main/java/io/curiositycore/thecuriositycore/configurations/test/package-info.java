@@ -1,0 +1,1 @@
+package io.curiositycore.thecuriositycore.configurations.test;
