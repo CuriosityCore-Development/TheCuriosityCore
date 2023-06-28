@@ -118,8 +118,8 @@ public abstract class CommandExecutable {
     protected String[] initTrueExecutableArgs(String[] arguments){
         boolean indexFound = false;
         List<String> argsToReturn = new ArrayList<>();
-        // TODO: DeltaNote, Arrays.stream().toList() might not be necessary, keep as String[]?
-        for (String currentArgument : Arrays.stream(arguments).toList()) {
+
+        for (String currentArgument : arguments) {
             if (indexFound || currentArgument.contains(this.name)) {
                 indexFound = true;
                 argsToReturn.add(currentArgument);

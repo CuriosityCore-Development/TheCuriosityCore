@@ -19,7 +19,10 @@ public abstract class CommandManager implements TabExecutor {
      * Map containing key-value pairs of command executable names and command executables respectively.
      */
     protected Map<String, CommandExecutable> commandMap = new HashMap<>();
-    // TODO: DeltaNote, JavaDoc this
+    /**
+     * Object containing all the inputs initially set for this command by a sender.
+     * (Utilised for better parameter formatting)
+     */
     protected CommandInputs commandInputs;
 
     @Override

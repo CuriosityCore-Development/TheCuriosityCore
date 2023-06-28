@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-// TODO: DeltaNote, Plugin uses plugin.yml usage on failure rather than in-plugin usage
+
 public class SubExecutableA extends CommandExecutable{
     @Override
     public void perform(CommandSender sender, String[] commandArguments) {
