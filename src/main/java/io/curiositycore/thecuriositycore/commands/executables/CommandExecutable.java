@@ -5,8 +5,8 @@ import org.bukkit.command.CommandSender;
 
 import java.util.*;
 /**
- * Abstract to the define the generalisation of any executeable within a command within a Curiosity Core
- * <code>Plugin</code>. This generalisation applies to any type of command executeable (including sub-executeables).<br>
+ * Abstract to define the generalisation of any executable within a command within a Curiosity Core
+ * <code>Plugin</code>. This generalisation applies to any type of command executable (including sub-executables).<br>
  *  * <i>(Supplementary interfaces can be utilised to add additional functionality to these executables)</i>
  */
 @Getter
@@ -118,6 +118,7 @@ public abstract class CommandExecutable {
     protected String[] initTrueExecutableArgs(String[] arguments){
         boolean indexFound = false;
         List<String> argsToReturn = new ArrayList<>();
+        // TODO: DeltaNote, Arrays.stream().toList() might not be necessary, keep as String[]?
         for (String currentArgument : Arrays.stream(arguments).toList()) {
             if (indexFound || currentArgument.contains(this.name)) {
                 indexFound = true;

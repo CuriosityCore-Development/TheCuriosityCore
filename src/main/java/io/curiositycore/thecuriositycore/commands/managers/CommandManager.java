@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 /**
- * Abstract to the define the generalisation of any manager for a group of <code>CommandExecutable</code> instances.
+ * Abstract to define the generalisation of any manager for a group of <code>CommandExecutable</code> instances.
  * This class should be treated as a typical <code>TabExecutor</code> (i.e. registered on enable as a primary command).
  */
 public abstract class CommandManager implements TabExecutor {
@@ -19,6 +19,7 @@ public abstract class CommandManager implements TabExecutor {
      * Map containing key-value pairs of command executable names and command executables respectively.
      */
     protected Map<String, CommandExecutable> commandMap = new HashMap<>();
+    // TODO: DeltaNote, JavaDoc this
     protected CommandInputs commandInputs;
 
     @Override
@@ -42,7 +43,7 @@ public abstract class CommandManager implements TabExecutor {
 
         if(args.length == 1){
             baseCommand.perform(sender, args);
-            return false;
+            return true;
         }
 
         if(baseCommand.getSubCommands().size() > 1 && baseCommand.getSubCommands().get(args[1]) != null){
@@ -50,7 +51,7 @@ public abstract class CommandManager implements TabExecutor {
         }
 
 
-        return true;
+        return false;
     }
 
 
@@ -68,8 +69,8 @@ public abstract class CommandManager implements TabExecutor {
         }
 
 
-            tabsToReturn.addAll(this.commandMap.get(args[0]).getTabCompletesForCommand(args));
-            return tabsToReturn;
+        tabsToReturn.addAll(this.commandMap.get(args[0]).getTabCompletesForCommand(args));
+        return tabsToReturn;
 
 
     }
@@ -100,7 +101,7 @@ public abstract class CommandManager implements TabExecutor {
     }
 
     /**
-     * Method that defines any tests that require conducting before execution of the command. By default it is true, but
+     * Method that defines any tests that require conducting before execution of the command. By default, it is true, but
      * can be overwritten in child classes to allow for functionality.
      * <code>CommandExecutable</code>
      * @return The boolean representing the success or failure of the checks.
