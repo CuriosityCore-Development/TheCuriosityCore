@@ -2,7 +2,3 @@ name: TheCuriosityCore
 version: '${project.version}'
 main: io.curiositycore.thecuriositycore.TheCuriosityCore
 api-version: 1.19
-commands:
-  primary_command_a:
-    description: Test
-    permission:
