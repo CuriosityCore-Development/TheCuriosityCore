@@ -2,6 +2,7 @@ package io.curiositycore.thecuriositycore.commands.managers.interfaces;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
 /**
  * Interface that should be implemented by command related classes that require a <code>ConsoleCommandSender</code>
  * instance for operation.

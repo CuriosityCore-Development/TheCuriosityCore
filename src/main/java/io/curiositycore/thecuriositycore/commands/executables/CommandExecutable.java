@@ -11,7 +11,6 @@ import java.util.*;
  */
 @Getter
 public abstract class CommandExecutable {
-
     /**
      * The name of the <code>SubCommand</code>, as a <code>String</code>.
      */

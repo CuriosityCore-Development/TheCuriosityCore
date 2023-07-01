@@ -6,7 +6,6 @@ import io.curiositycore.thecuriositycore.commands.managers.interfaces.RequiresCo
  * <code>CommandSender</code>s.
  */
 public abstract class ConsoleCommandManager extends CommandManager implements RequiresConsole {
-
     @Override
     protected boolean preCommandTests() {
         return isMessengerConsole(this.commandInputs.getSender());

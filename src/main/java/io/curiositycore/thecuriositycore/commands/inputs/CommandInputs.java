@@ -4,7 +4,7 @@ import lombok.Getter;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
-//TODO in future phases of the Library, convert this into a record.
+//TODO in future phases of the Library, convert this into a record (would be good for good code practice.
 /**
  * Represents the parameters of the <code>onCommand</code> method of the <code>CommandExecutor</code> interface.<br>
  * <i>(Purpose of this class is to allow for better readability of the Library's

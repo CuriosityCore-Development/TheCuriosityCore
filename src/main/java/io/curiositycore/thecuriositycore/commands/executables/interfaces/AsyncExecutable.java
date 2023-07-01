@@ -5,5 +5,6 @@ public interface AsyncExecutable {
     default void runAsyncTask() {
 
     }
+
 }
 

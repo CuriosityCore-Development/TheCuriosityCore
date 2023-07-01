@@ -18,5 +18,4 @@ public interface RequiresPlayer {
         return sender instanceof Player;
     }
 
-
 }

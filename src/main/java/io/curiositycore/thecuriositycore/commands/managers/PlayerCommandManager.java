@@ -7,7 +7,6 @@ import io.curiositycore.thecuriositycore.commands.managers.interfaces.RequiresPl
  * <code>CommandSender</code>s.
  */
 public abstract class PlayerCommandManager extends CommandManager implements RequiresPlayer {
-
     @Override
     protected boolean preCommandTests() {
         return isMessengerPlayer(this.commandInputs.getSender());

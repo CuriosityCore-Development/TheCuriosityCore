@@ -57,8 +57,6 @@ public abstract class CommandManager implements TabExecutor {
         return false;
     }
 
-
-
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         List<String> tabsToReturn = new ArrayList<>();
