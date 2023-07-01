@@ -1,14 +1,13 @@
 package io.curiositycore.thecuriositycore;
 
+//import io.curiositycore.thecuriositycore.configurations.CachedConfigManager;
 import io.curiositycore.thecuriositycore.testclasses.testCommand.PrimaryCommandAManager;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
 
-
 import java.io.File;
 import java.util.Objects;
-import java.util.logging.Logger;
 
 public final class TheCuriosityCore extends JavaPlugin {
 
@@ -18,6 +17,7 @@ public final class TheCuriosityCore extends JavaPlugin {
     public TheCuriosityCore() {
         super();
         unitTest = false;
+
     }
 
     protected TheCuriosityCore(
@@ -30,8 +30,7 @@ public final class TheCuriosityCore extends JavaPlugin {
     }
     @Override
     public void onEnable() {
-
-        Objects.requireNonNull(this.getCommand("primary_command_a")).setExecutor(new PrimaryCommandAManager());
+        this.getCommand("primary_command_a").setExecutor(new PrimaryCommandAManager());
     }
 
     @Override
@@ -40,6 +39,7 @@ public final class TheCuriosityCore extends JavaPlugin {
 
     }
 
-
-
+    //public CachedConfigManager getConfigManager(){
+        //return new CachedConfigManager(this);
+    //}
 }

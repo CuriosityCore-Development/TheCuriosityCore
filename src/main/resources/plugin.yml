@@ -3,5 +3,6 @@ version: '${project.version}'
 main: io.curiositycore.thecuriositycore.TheCuriosityCore
 api-version: 1.19
 commands:
-  messages:
-    aliases: "primary_command_a"
+  primary_command_a:
+    description: Test
+    permission:
