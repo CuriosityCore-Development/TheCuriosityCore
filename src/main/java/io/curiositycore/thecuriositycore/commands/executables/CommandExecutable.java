@@ -7,7 +7,7 @@ import java.util.*;
 /**
  * Abstract to define the generalisation of any executable within a command within a Curiosity Core
  * <code>Plugin</code>. This generalisation applies to any type of command executable (including sub-executables).<br>
- *  * <i>(Supplementary interfaces can be utilised to add additional functionality to these executables)</i>
+ * <i>(Supplementary interfaces can be utilised to add additional functionality to these executables)</i>
  */
 @Getter
 public abstract class CommandExecutable {
@@ -70,11 +70,13 @@ public abstract class CommandExecutable {
      * @return the name of the command.
      */
     protected abstract String initName();
+
     /**
      * Initiate the <code>description</code> field of the class.
      * @return the description of the command.
      */
     protected abstract String initDescription();
+
     /**
      * Initiate the <code>syntax</code> field of the class.
      * @return the syntax used when executing the command.
@@ -117,15 +119,13 @@ public abstract class CommandExecutable {
     protected String[] initTrueExecutableArgs(String[] arguments){
         boolean indexFound = false;
         List<String> argsToReturn = new ArrayList<>();
-        // TODO: DeltaNote, Arrays.stream().toList() might not be necessary, keep as String[]?
-        for (String currentArgument : Arrays.stream(arguments).toList()) {
+
+        for (String currentArgument : arguments) {
             if (indexFound || currentArgument.contains(this.name)) {
                 indexFound = true;
                 argsToReturn.add(currentArgument);
 
             }
-
-
         }
         return argsToReturn.toArray(new String[0]);
     }

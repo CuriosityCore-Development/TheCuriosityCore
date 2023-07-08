@@ -1,5 +1,5 @@
 name: TheCuriosityCore
 version: '${project.version}'
 main: io.curiositycore.thecuriositycore.TheCuriosityCore
-api-version: 1.19
+api-version: 1.19.2
 

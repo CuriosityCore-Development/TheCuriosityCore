@@ -19,7 +19,9 @@ public abstract class CommandManager implements TabExecutor {
      * Map containing key-value pairs of command executable names and command executables respectively.
      */
     protected Map<String, CommandExecutable> commandMap = new HashMap<>();
-    // TODO: DeltaNote, JavaDoc this
+    /**
+     * Object containing the initial parameters of the <code>onCommand</code> call.
+     */
     protected CommandInputs commandInputs;
 
     @Override
@@ -50,7 +52,6 @@ public abstract class CommandManager implements TabExecutor {
             return potentialSubCommandExecution(sender,command,label,args,baseCommand);
         }
 
-
         return false;
     }
 
@@ -69,13 +70,20 @@ public abstract class CommandManager implements TabExecutor {
 
         tabsToReturn.addAll(this.commandMap.get(args[0]).getTabCompletesForCommand(args));
         return tabsToReturn;
-
-
     }
+
+    /**
+     * Adds a command executable to the manager's map.
+     * @param executableToAdd The command executable to add.
+     */
+    protected void addExecuteable(CommandExecutable executableToAdd){
+        this.commandMap.put(executableToAdd.getName(),executableToAdd);
+    }
+
     protected CommandExecutable getCommand(String commandName){
         return this.commandMap.get(commandName);
     }
-    //TODO The CommandInputs class can be used to streamline this, and executables.
+
     /**
      * Attempts to execute the potential sub-command-executable that has been called.
      * @param sender Sender of the command that the sub-command is a part of.
