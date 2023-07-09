@@ -1,1 +1,0 @@
-package io.curiositycore.thecuriositycore.inventorymenus.factories;
