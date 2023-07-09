@@ -1,6 +1,7 @@
 package io.curiositycore.thecuriositycore.inventorymenus.managers;
 
 import io.curiositycore.thecuriositycore.inventorymenus.handlers.InventoryHandler;
+import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -23,7 +24,8 @@ public class InventoryMenuManager extends BaseCustomInventoryManager{
         if(inventoryHandler == null){
             return;
         }
-        inventoryHandler.onClick();
+        inventoryClickEvent.setCancelled(true);
+        inventoryHandler.onClick(inventoryClickEvent.getSlot(),inventoryClickEvent.getWhoClicked());
     }
 
     @Override
@@ -42,5 +44,10 @@ public class InventoryMenuManager extends BaseCustomInventoryManager{
             return;
         }
         inventoryHandler.onClose();
+    }
+
+    @Override
+    public void logEvent(Event eventToLog) {
+        //TODO in future when logging package is complete this needs implementing
     }
 }

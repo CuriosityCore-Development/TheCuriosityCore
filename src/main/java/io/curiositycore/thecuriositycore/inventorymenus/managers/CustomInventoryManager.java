@@ -1,6 +1,7 @@
 package io.curiositycore.thecuriositycore.inventorymenus.managers;
 
 import io.curiositycore.thecuriositycore.inventorymenus.handlers.InventoryHandler;
+import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -12,4 +13,5 @@ public interface CustomInventoryManager {
     void handleClick(InventoryClickEvent inventoryClickEvent);
     void handleOpen(InventoryOpenEvent inventoryOpenEvent);
     void handleClose(InventoryCloseEvent inventoryCloseEvent);
+    void logEvent(Event eventToLog);
 }
