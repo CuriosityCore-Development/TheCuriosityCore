@@ -1,7 +1,7 @@
 package io.curiositycore.thecuriositycore.inventorymenus.palette;
 
 import io.curiositycore.thecuriositycore.inventorymenus.buttons.BaseInventoryButton;
-import io.curiositycore.thecuriositycore.inventorymenus.buttons.InventoryButton;
+
 import lombok.Getter;
 
 import java.util.HashMap;
@@ -12,7 +12,7 @@ import java.util.Map;
  * io.curiositycore.thecuriositycore.inventorymenus.buttons.BaseInventoryButton BaseInventoryButtons} that allow for
  * easy creation of a custom inventory. <p>
  *
- * Utilises an array of arrrays to make for easy visulisation of the layout of the inventory the palette is related to.
+ * Utilises an array of arrays to make for easy visualisation of the layout of the inventory the palette is related to.
  */
 public abstract class BaseInventoryPalette implements InventoryPalette {
     /**

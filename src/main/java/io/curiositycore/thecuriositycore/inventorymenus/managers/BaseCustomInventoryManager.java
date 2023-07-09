@@ -13,6 +13,6 @@ public abstract class BaseCustomInventoryManager implements CustomInventoryManag
     /**
      * A map of all inventories that are linked to a custom inventory handler.
      */
-    Map<Inventory, InventoryHandler> activeInventoryMap = new HashMap<>();
+    protected Map<Inventory, InventoryHandler> activeInventoryMap = new HashMap<>();
 
 }

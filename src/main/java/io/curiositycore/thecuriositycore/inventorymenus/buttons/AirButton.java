@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Button used to proxy empty spaces within an inventory menu. Creates a nameless, loreless air block (essentially empty
+ * Button used to proxy empty spaces within an inventory menu. Creates a nameless, lore lacking, air block (essentially empty
  * slot).
  */
 public class AirButton extends BaseInventoryButton{
