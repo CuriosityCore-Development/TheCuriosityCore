@@ -1,14 +1,12 @@
 package io.curiositycore.thecuriositycore.inventorymenus.buttons;
 
-import net.kyori.adventure.text.Component;
-import org.bukkit.Material;
-
-import java.util.List;
-
+/**
+ * Interface that represents the functionality of an inventory button within a plugin.
+ */
 public interface InventoryButton {
-    Material initButtonMaterial();
-    List<Component> initButtonLore();
-    Component initButtonName();
+    /**
+     * Initialises the button.
+     */
     void initialize();
 
 }
