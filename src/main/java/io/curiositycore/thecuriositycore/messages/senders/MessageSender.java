@@ -34,9 +34,14 @@ public abstract class MessageSender {
 
     /**
      * Sends a message to predefined <code>Audience</code>
-     * @param text An <code>Adventure Component</code> to be sent
+     * @param textComponent An <code>Adventure Component</code> to be sent
      */
-    protected void sendMessage(Component text){
-        this.audience.sendMessage(text);
+    protected void sendMessage(Component textComponent){
+        if (!checksBeforeSends()) {
+            return;
+        }
+        this.audience.sendMessage(textComponent);
     }
+
+    protected abstract boolean checksBeforeSends();
 }
