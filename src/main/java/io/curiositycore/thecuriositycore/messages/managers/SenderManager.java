@@ -6,9 +6,11 @@ import java.util.HashMap;
 import java.util.UUID;
 
 /**
+ * <strong>Deprecated to investigate alternate approach.</strong> <br>
  * Abstract class to define the generalization of managing <code>MessageSenders</code> within a Curiosity Core <code>Plugin</code>
  * <br> Allows for limited modification and easy management of individual <code>MessageSenders</code>
  */
+@Deprecated
 public abstract class SenderManager {
     /**
      * Hashmap of individual <code>MessageSenders</code> as well as their Unique Identifiers

@@ -7,9 +7,11 @@ import net.kyori.adventure.text.Component;
 import java.util.UUID;
 
 /**
+ * <strong>Deprecated to investigate alternate approach.</strong> <br>
  * Abstract class to define the generalisation of any messages to be sent within a Curiosity Core <code>Plugin</code>.
  * <br> Contains an <code>Audience</code> in order to streamline sending messages
  */
+@Deprecated
 @Getter
 public abstract class MessageSender {
     /**
