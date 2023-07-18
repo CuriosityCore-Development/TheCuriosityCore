@@ -1,13 +1,11 @@
 package io.curiositycore.thecuriositycore.configurations.interfaces;
 
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * The different components of a Configuration File address.
  */
-public interface ConfigEnum {
+public interface ConfigValuesEnum {
     /**
      * Gets the address of the section the value is in.
      * @return The address of the value's section as a <code>String</code>.
@@ -21,15 +19,10 @@ public interface ConfigEnum {
     @NotNull
     String getValueAddress();
 
-    Class<?> getClassType();
-
-
     /**
-     * Get a <code>String[]</code> of the 2 address components needed to find the value within the config file.
-     * @return The 2 address components as a <code>String[]</code>
+     * Gets the class type of the cached config value, allowing for generic retreival of any value type stored in the config.
+     * @return The class type of the cached config value.
      */
-    default String[] getPathArray(){
-        return new String[]{getSectionAddress(),getValueAddress()};
-    }
+    Class<?> getClassType();
 
 }

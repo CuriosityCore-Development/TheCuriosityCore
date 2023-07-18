@@ -1,9 +1,9 @@
 package io.curiositycore.thecuriositycore.configurations.test.configs.enums;
 
-import io.curiositycore.thecuriositycore.configurations.interfaces.ConfigEnum;
+import io.curiositycore.thecuriositycore.configurations.interfaces.ConfigValuesEnum;
 import org.jetbrains.annotations.NotNull;
 
-public enum ActivityScanSettings implements ConfigEnum {
+public enum ActivityScanSettings implements ConfigValuesEnum {
     ENABLED(Boolean.class,"enabled" ),
     ACTIVITY_REQUIREMENT(Integer.class,"activity_requirement");
 

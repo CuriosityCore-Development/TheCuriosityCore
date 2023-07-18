@@ -1,10 +1,9 @@
 package io.curiositycore.thecuriositycore.configurations.test.configs.enums;
 
-import io.curiositycore.thecuriositycore.configurations.interfaces.ConfigEnum;
-import org.checkerframework.checker.units.qual.A;
+import io.curiositycore.thecuriositycore.configurations.interfaces.ConfigValuesEnum;
 import org.jetbrains.annotations.NotNull;
 
-public enum ToShowDelta implements ConfigEnum {
+public enum CustomWarValue implements ConfigValuesEnum {
     AREA_CAPTURE_RADIUS(Integer.class,"area_capture_radius"),
     AREA_INFLUENCE_REQUIREMENT(Integer.class,"area_influence_requirement");
 
@@ -12,7 +11,7 @@ public enum ToShowDelta implements ConfigEnum {
     String valueAddress;
     Class<?> classType;
 
-    ToShowDelta(Class<?> classType, String valueAddress){
+    CustomWarValue(Class<?> classType, String valueAddress){
         this.sectionAddress = getSectionAddress();
         this.valueAddress = valueAddress;
         this.classType = classType;

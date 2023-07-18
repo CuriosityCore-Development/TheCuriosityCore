@@ -3,11 +3,12 @@ import be.seeseemelk.mockbukkit.ServerMock;
 import be.seeseemelk.mockbukkit.entity.PlayerMock;
 import io.curiositycore.thecuriositycore.TheCuriosityCore;
 import io.curiositycore.thecuriositycore.configurations.CachedConfigManager;
-import io.curiositycore.thecuriositycore.configurations.test.configs.caches.Cache1;
+import io.curiositycore.thecuriositycore.configurations.test.configs.caches.ActivityScanSettingsCacheTest;
+import io.curiositycore.thecuriositycore.configurations.test.configs.caches.CustomWarCacheTest;
 import io.curiositycore.thecuriositycore.configurations.test.configs.enums.ActivityScanSettings;
-import io.curiositycore.thecuriositycore.configurations.test.configs.enums.ConfigCache1;
-import io.curiositycore.thecuriositycore.configurations.test.configs.enums.ToShowDelta;
+import io.curiositycore.thecuriositycore.configurations.test.configs.enums.CustomWarValue;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -43,7 +44,7 @@ public class TestConfig {
         @org.junit.jupiter.api.Test
         void BooleanTest(){
             CachedConfigManager configManager = this.curiosityCore.getConfigManager();
-            Boolean testbool = configManager.getObject("TestCache",Boolean.class, ActivityScanSettings.ENABLED);
+            Boolean testbool = configManager.getObject(ActivityScanSettingsCacheTest.class,Boolean.class, ActivityScanSettings.ENABLED);
             assertTrue(testbool);
         }
         @org.junit.jupiter.api.Test
@@ -61,7 +62,7 @@ public class TestConfig {
 
             // Measure retrieval time for configManager.getObject()
             long initialTime = System.nanoTime();
-            Integer cachedValue = configManager.getObject("TestCache2", Integer.class, ToShowDelta.AREA_CAPTURE_RADIUS);
+            Integer cachedValue = configManager.getObject(CustomWarCacheTest.class, Integer.class, CustomWarValue.AREA_CAPTURE_RADIUS);
             testTime = System.nanoTime() - initialTime;
 
 
@@ -81,14 +82,14 @@ public class TestConfig {
 
 
             long initialTime1 = System.nanoTime();
-            int influenceRequired = configManager.getObject("TestCache2",
+            int influenceRequired = configManager.getObject(CustomWarCacheTest.class,
                                                                         Integer.class,
-                                                                        ToShowDelta.AREA_INFLUENCE_REQUIREMENT);
+                                                                        CustomWarValue.AREA_INFLUENCE_REQUIREMENT);
             testTime1 = System.nanoTime() - initialTime1;
 
 
             long initialTime2 = System.nanoTime();
-            Integer testInt = configManager.getObject("TestCache2", Integer.class, ToShowDelta.AREA_INFLUENCE_REQUIREMENT);
+            Integer testInt = configManager.getObject(CustomWarCacheTest.class, Integer.class, CustomWarValue.AREA_INFLUENCE_REQUIREMENT);
             testTime2 = System.nanoTime() - initialTime2;
             assertNotNull(testInt);
             System.out.println("Normal Spigot retrieval time in nanoSeconds:" + testTime1+", New Cache retrieval time in nanoSeconds: "+ testTime2);
