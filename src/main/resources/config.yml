@@ -1,0 +1,92 @@
+# =====================================================================================================================
+#                                 ╔═══════════════════════════════════════════════╗
+#                                           LANDLORD CONFIGURATION FILE
+#                                 ╚═══════════════════════════════════════════════╝
+# =====================================================================================================================
+#
+# This config file is for the LandLord Plugin.
+# The LandLord Plugin is an add-on for the "Lands Plugin" that aims to make the automation of player activity and
+# ownership limits more user-friendly to control.
+#
+# This config was generated for version X.XX.X
+#
+# For more information on each option, see the plugin documentation at: XXXXXXXXXXXXXXXXXX.
+#
+# =====================================================================================================================
+#
+#
+# =======================================
+#               Scan Options
+# =======================================
+
+# These options are used to define if scans should be conducted automatically or not, and what time period said
+# scans should be conducted over.
+#
+# activity_scan: Scans to see if all lands have at least 1 player who is above the minimum acitvity requirements.
+#
+# activity_requirement: Number of minutes (per scan period) of activity needed by a player.
+#
+# activity_range: Number of days that a player's activity will be analysed over.
+#
+# scan_period: Determines the number of hours between individual scans.
+#
+# default_session_time: Determines how many minutes to add to a players activity in the case of game session in which
+# a server crash occured.
+#
+# delay_on_enable: Determines how long, in minutes after a restart the plugin will begin the initial scan with a
+#                  minimum of 10 minutes.
+
+# =======================================
+activity_scan:
+  enabled: true
+
+  activity_requirement: 90
+
+  activity_range: 30
+
+  scan_period: 1
+
+  default_session_time: 10
+
+  delay_on_enable: 10
+
+
+
+# =======================================
+#      Land Ownership Limit Options
+# =======================================
+
+# These options are used to define limits to how many lands a player can own at any given time. This limit will
+# prevent the creation of new lands by the player, or transferal (automatically or not) of lands to said player.
+#
+# owner_limit: Determines if the server will have an limit on the number of lands a player can own.
+#
+# land_ownership_limit: Maximum number of lands a player can own.
+#
+# =======================================
+owner_limit:
+  enabled: true
+
+  land_ownership_limit: 3
+
+# =======================================
+#           Custom War Options
+# =======================================
+#
+# These options are used to define the properties of the Custom War gamemodes.
+#
+# area_influence_requirement: How much influence (successful checks where there are more of one team than the other
+# within the area radius) is required to capture the area.
+#
+# =======================================
+custom_war:
+  enabled: true
+
+  area_influence_requirement: 30
+
+  area_capture_radius: 10
+
+  points_required_for_victory: 4
+
+  points_scored_from_area_capture: 1
+
