@@ -39,9 +39,9 @@ class EnumToMapConverter<E extends Enum<E> & ConfigValuesEnum> {
                 map.put(enumValue, value);
             }
             catch(NullPointerException nullPointerException){
-                String pathAdddress = enumValue.getSectionAddress()+enumValue.getSectionAddress();
+                String pathAddress = enumValue.getSectionAddress()+enumValue.getValueAddress();
                 //TODO when all branches merged, integrate messages package.
-                Bukkit.getLogger().info("The address '" + pathAdddress+"' resulted in a null value.");
+                Bukkit.getLogger().info("The address '" + pathAddress+"' resulted in a null value.");
             }
         }
 

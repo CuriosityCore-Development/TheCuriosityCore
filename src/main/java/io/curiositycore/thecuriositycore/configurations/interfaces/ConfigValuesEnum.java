@@ -20,7 +20,7 @@ public interface ConfigValuesEnum {
     String getValueAddress();
 
     /**
-     * Gets the class type of the cached config value, allowing for generic retreival of any value type stored in the config.
+     * Gets the class type of the cached config value, allowing for generic retrieval of any value type stored in the config.
      * @return The class type of the cached config value.
      */
     Class<?> getClassType();
