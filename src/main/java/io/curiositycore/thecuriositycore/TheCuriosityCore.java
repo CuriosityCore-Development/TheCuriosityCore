@@ -1,5 +1,6 @@
 package io.curiositycore.thecuriositycore;
 
+
 import io.curiositycore.thecuriositycore.configurations.CachedConfigManager;
 import io.curiositycore.thecuriositycore.configurations.test.configs.managers.ManagerTest;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -13,10 +14,6 @@ public final class TheCuriosityCore extends JavaPlugin {
 
     private final boolean unitTest;
 
-
-    public TheCuriosityCore() {
-        super();
-        unitTest = false;
     }
 
     protected TheCuriosityCore(
@@ -29,13 +26,10 @@ public final class TheCuriosityCore extends JavaPlugin {
     }
     @Override
     public void onEnable() {
-
     }
 
     @Override
-    public void onDisable() {
-
-
+    public void onDisable(){ 
     }
 
     public CachedConfigManager getConfigManager(){
