@@ -43,9 +43,10 @@ public abstract class BaseSqlTable implements Table {
         this.dataSourceForTable = dataSourceForTable;
     }
 
+    //TODO This needs to be done when we add the full merge (due to needing other library packages to complete.
     @Override
     public void initTableFromExisting() {
-        //TODO figure out the best way to approach this.
+
     }
 
     @Override
@@ -55,22 +56,33 @@ public abstract class BaseSqlTable implements Table {
 
     @Override
     public void insertRow(Object[] rowToAdd) {
-        //TODO implement functionality
+        String[] columnNames = getColumnNames();
+        SqlDataTypes[] dataTypes = getDataTypes();
+        if(areCorrectDataTypes(rowToAdd,dataTypes)){
+            throw new RuntimeException("The row was not added as it's data types do not match that of the table's" +
+                    "columns!");
+        }
+        SqlQueries.insertValuesIntoTable(this.tableName,this.dataSourceForTable,columnNames,rowToAdd);
+        this.rowList.add(new SqlRow(rowToAdd,this.rowList.size()+1));
+
     }
 
+    //TODO This needs to be done when we add the full merge (due to needing other library packages to complete.
     @Override
     public void updateRow(int rowIndex, Object[] updatedRow) {
-        //TODO implement functionality
+
     }
 
+    //TODO This needs to be done when we add the full merge (due to needing other library packages to complete.
     @Override
     public void deleteRow(int rowIndex) {
-        //TODO implement functionality
+
     }
 
+    //TODO This needs to be done when we add the full merge (due to needing other library packages to complete.
     @Override
     public void updateTableInDataBase() {
-         //TODO utilise other classes to update table
+
     }
 
     @Override
@@ -118,5 +130,39 @@ public abstract class BaseSqlTable implements Table {
         SqlColumn[] newArrayProxy = new SqlColumn[columnsInTable.length];
         this.columnsInTable = Arrays.copyOf(this.columnsInTable,newArrayProxy.length);
         this.columnsInTable[columnsInTable.length-1] = sqlColumnToAdd;
+    }
+
+    /**
+     * Gets the names of each column in this table.
+     * @return The names of each column in thsi table.
+     */
+    private String[] getColumnNames(){
+        return Arrays.stream(this.columnsInTable).map(SqlColumn::getColumnName).toArray(String[]::new);
+    }
+
+    /**
+     * Gets the data types of each column in this table.
+     * @return The data types of each column in this table.
+     */
+    private SqlDataTypes[] getDataTypes(){
+        return Arrays.stream(this.columnsInTable).map(SqlColumn::getDataType).toArray(SqlDataTypes[]::new);
+    }
+
+    /**
+     * Checks to see if each object within the row is of the correct data type, throwing an exception if not. This helps
+     * ensure type safety and reduces the risk of SQL injection.
+     * @param valuesToCheck The object array of values to add to the table.
+     * @param columnTypes The data types of each column within the table.
+     * @return True if the value's data types match that of the column'ss, false if they do not.
+     */
+    private boolean areCorrectDataTypes(Object[] valuesToCheck, SqlDataTypes[] columnTypes ){
+
+        for(int i = 0; i <=valuesToCheck.length; i++){
+            Class<?> classOfDataType = columnTypes[i].getTypeClass();
+            if (!classOfDataType.isInstance(valuesToCheck[i])) {
+                return false;
+            }
+        }
+        return true;
     }
 }

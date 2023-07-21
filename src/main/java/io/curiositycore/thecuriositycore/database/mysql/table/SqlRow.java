@@ -19,4 +19,14 @@ public class SqlRow {
      */
     int rowIndex;
 
+    /**
+     * Constructor which initialises the row's data and index in the table.
+     * @param rowData The data of a single row.
+     * @param rowIndex The index of a row within the table.
+     */
+    public SqlRow(Object[] rowData, int rowIndex){
+        this.rowData = rowData;
+        this.rowIndex =rowIndex;
+    }
+
 }
