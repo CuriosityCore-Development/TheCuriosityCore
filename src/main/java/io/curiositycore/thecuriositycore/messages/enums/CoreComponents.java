@@ -8,9 +8,12 @@ import net.kyori.adventure.text.format.TextColor;
  * Enumeration of {@link net.kyori.adventure.text.Component Components} used for
  * the easy creation of messages requiring the CuriosityCore stamp
  */
-public enum CCComponents implements ComponentFactory<CCComponents> {
+public enum CoreComponents implements ComponentFactory<CoreComponents> {
     START_BRACKET("["),
     END_BRACKET("] "),
+    SEPARATOR(" | "),
+    DASHED_HEADER("-----"),
+    DASH("-"),
     /**
      * The full <code>CuriosityCore</code> name
      */
@@ -29,7 +32,7 @@ public enum CCComponents implements ComponentFactory<CCComponents> {
      * The default constructor for all <code>CCComponents</code> values
      * @param text Desired String to be formatted
      */
-    CCComponents(final String text){this.text = text;}
+    CoreComponents(final String text){this.text = text;}
 
     @Override
     public Component getComponent() {

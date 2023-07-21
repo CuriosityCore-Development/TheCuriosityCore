@@ -7,7 +7,7 @@ import net.kyori.adventure.text.format.TextColor;
  * Enumeration of {@link net.kyori.adventure.text.format.TextColor TextColors} used for
  * the easy creation of messages requiring the CuriosityCore stamp
  */
-public enum CCColors implements ColorFactory {
+public enum CoreColors implements ColorFactory<CoreColors> {
     /**
      * Primary color of the CuriosityCore stamp (<code>0x555599</code>)
      */
@@ -26,7 +26,7 @@ public enum CCColors implements ColorFactory {
      * The default constructor for all <code>CCColors</code> values
      * @param color Desired Integer to be formatted
      */
-    CCColors(int color){this.color = color;}
+    CoreColors(int color){this.color = color;}
 
     @Override
     public TextColor getColorComp(){
