@@ -1,8 +1,6 @@
 package io.curiositycore.thecuriositycore.database.mysql.queries;
-
-import com.google.errorprone.annotations.Var;
-
-public enum SqlDataTypes implements SqlDataType{
+//TODO javadocs
+public enum SqlDataTypes {
     CHAR("CHAR(%s)",true,false),
     VARCHAR("VARCHAR(%s)",true,false),
     BINARY("BINARY(%s)",true,false),
@@ -32,9 +30,9 @@ public enum SqlDataTypes implements SqlDataType{
     TIME("TIME(%s)",true,false),
     YEAR("YEAR(%s)",false,false);
 
-    private String dataTypeString;
-    boolean hasParameters;
-    boolean hasMultiParameters;
+    private final String dataTypeString;
+    final boolean hasParameters;
+    final boolean hasMultiParameters;
 
     SqlDataTypes(String dataTypeString, boolean hasParameters, boolean hasMultiParameters){
         this.dataTypeString = dataTypeString;

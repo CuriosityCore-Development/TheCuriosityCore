@@ -5,8 +5,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-
-public abstract class DataSourceInit {
+//TODO javadocs
+public abstract class SQLSourceInit {
     public MysqlDataSource getNewDataSource(FileConfiguration configurationFile) throws SQLException {
         MysqlDataSource dataSource = new MysqlDataSource();
         dataSource.setServerName(setHost(configurationFile));

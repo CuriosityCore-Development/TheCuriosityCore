@@ -1,6 +1,6 @@
 package io.curiositycore.thecuriositycore.database;
 
-import java.util.List;
+//TODO java docs
 
 /**
  * Interface that defines the functionality of a table within a database.
