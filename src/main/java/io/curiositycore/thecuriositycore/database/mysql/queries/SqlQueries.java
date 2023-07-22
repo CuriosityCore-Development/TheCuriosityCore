@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.Collections;
 
 /**
- * Utility class responsible for querying a Sql datasource for the purposes of creating, manipulating or retrieving table
+ * Utility class responsible for querying a SQL datasource for the purposes of creating, manipulating or retrieving table
  * data.
  */
 public class SqlQueries {
@@ -22,11 +22,11 @@ public class SqlQueries {
 
     /**
      * Creates a new table within the Sql database. The table has no columns other than id.
-     * @param tableName What to the name the newly created table.
+     * @param tableName What to name the newly created table.
      * @param dataSource The datasource where the table is to be created.
      */
     public static void createNewTable(String tableName,DataSource dataSource){
-        String statement = String.format(SQLGeneralQuery.CREATE_TABLE.getSql(),tableName);
+        String statement = String.format(SqlGeneralQuery.CREATE_TABLE.getSql(),tableName);
         executeWithoutParams(statement,dataSource);
     }
 
@@ -38,12 +38,11 @@ public class SqlQueries {
      * @param dataTypeString The string that represents the datasource.
      */
     public static void addColumnToTable(String tableName, String columnName,DataSource dataSource, String dataTypeString){
-        executeWithoutParams(String.format(SQLGeneralQuery.APPEND_COLUMN_TO_TABLE.getSql(),columnName,dataTypeString),dataSource);
+        executeWithoutParams(String.format(SqlGeneralQuery.APPEND_COLUMN_TO_TABLE.getSql(),columnName,dataTypeString),dataSource);
     }
 
     /**
-     * Inserts a row of values into an existing table. Has sanity checks for ensuring that the values to be added are
-     * compatible with the data types of the table.
+     * Inserts a row of values into an existing table.
      * @param tableName The name of the table to add the row of values to.
      * @param dataSource The data source where the table is located.
      * @param valueIds The names of each of columns.
@@ -55,7 +54,7 @@ public class SqlQueries {
         }
         String columns = String.join(", ", valueIds);
         String placeholders = String.join(", ", Collections.nCopies(values.length, "?"));
-        String statement = String.format(SQLGeneralQuery.INSERT_TABLE_VALUE.getSql(), tableName, columns, placeholders);
+        String statement = String.format(SqlGeneralQuery.INSERT_TABLE_VALUE.getSql(), tableName, columns, placeholders);
         executeWithParams(statement,dataSource, values);
     }
 

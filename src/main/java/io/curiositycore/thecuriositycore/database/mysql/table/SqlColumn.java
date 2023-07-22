@@ -5,8 +5,8 @@ import lombok.Getter;
 
 /**
  * A single column within a {@linkplain BaseSqlTable SQL Table}.<p> This allows the input of new data into a table to be
- * more easily executed end user. This allows each value added to a table to be checked by the column's specific data
- * type to ensure both type safety and an extra security measure to mitigate sql injection.
+ * more easily executed by the end user. This allows each value added to a table to be checked by the column's specific data
+ * type to ensure both type safety and an extra security measure to mitigate SQL injection.
  */
 @Getter
 public class SqlColumn {

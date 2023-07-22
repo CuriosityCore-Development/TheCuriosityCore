@@ -58,10 +58,11 @@ public abstract class BaseSqlTable implements Table {
     public void insertRow(Object[] rowToAdd) {
         String[] columnNames = getColumnNames();
         SqlDataTypes[] dataTypes = getDataTypes();
-        if(areCorrectDataTypes(rowToAdd,dataTypes)){
+        if(!areCorrectDataTypes(rowToAdd,dataTypes)){
             throw new RuntimeException("The row was not added as it's data types do not match that of the table's" +
                     "columns!");
         }
+        // TODO: This needs adding to updateTableInDatabase() method
         SqlQueries.insertValuesIntoTable(this.tableName,this.dataSourceForTable,columnNames,rowToAdd);
         this.rowList.add(new SqlRow(rowToAdd,this.rowList.size()+1));
 
@@ -97,7 +98,7 @@ public abstract class BaseSqlTable implements Table {
      * @param dataType The column's acceptable value data type.
      * @param param The parameter of the data type.
      */
-    protected void addTableWithColumn(String columnName, SqlDataTypes dataType, int param){
+    protected void addColumnToTable(String columnName, SqlDataTypes dataType, int param){
         String dataTypeString = dataType.getDataType(param);
         SqlQueries.addColumnToTable(this.tableName,columnName,this.dataSourceForTable,dataTypeString);
         addColumnToCache(new SqlColumn(columnName,dataType));
@@ -111,7 +112,7 @@ public abstract class BaseSqlTable implements Table {
      * @param firstParam The first parameter of the data type.
      * @param secondParam The second parameter of the data type.
      */
-    protected void addTableWithColumn(String columnName, SqlDataTypes dataType, int firstParam, int secondParam){
+    protected void addColumnToTable(String columnName, SqlDataTypes dataType, int firstParam, int secondParam){
         String dataTypeString = dataType.getDataType(firstParam,secondParam);
         SqlQueries.addColumnToTable(this.tableName,columnName,this.dataSourceForTable,dataTypeString);
         addColumnToCache(new SqlColumn(columnName,dataType));
@@ -127,14 +128,14 @@ public abstract class BaseSqlTable implements Table {
             this.columnsInTable = new SqlColumn[]{sqlColumnToAdd};
         }
 
-        SqlColumn[] newArrayProxy = new SqlColumn[columnsInTable.length];
+        SqlColumn[] newArrayProxy = new SqlColumn[columnsInTable.length+1];
         this.columnsInTable = Arrays.copyOf(this.columnsInTable,newArrayProxy.length);
         this.columnsInTable[columnsInTable.length-1] = sqlColumnToAdd;
     }
 
     /**
      * Gets the names of each column in this table.
-     * @return The names of each column in thsi table.
+     * @return The names of each column in this table.
      */
     private String[] getColumnNames(){
         return Arrays.stream(this.columnsInTable).map(SqlColumn::getColumnName).toArray(String[]::new);
@@ -149,11 +150,11 @@ public abstract class BaseSqlTable implements Table {
     }
 
     /**
-     * Checks to see if each object within the row is of the correct data type, throwing an exception if not. This helps
+     * Checks to see if each object within the row is of the correct data type. This helps
      * ensure type safety and reduces the risk of SQL injection.
      * @param valuesToCheck The object array of values to add to the table.
      * @param columnTypes The data types of each column within the table.
-     * @return True if the value's data types match that of the column'ss, false if they do not.
+     * @return True if the value's data types match that of the columns, false if they do not.
      */
     private boolean areCorrectDataTypes(Object[] valuesToCheck, SqlDataTypes[] columnTypes ){
 

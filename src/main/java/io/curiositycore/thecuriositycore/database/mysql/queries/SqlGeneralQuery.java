@@ -7,7 +7,7 @@ import lombok.Getter;
  * query, to then be formatted within other classes. This ensures that no raw queries have to be implemented directly by
  * the end users.
  */
-public enum SQLGeneralQuery {
+public enum SqlGeneralQuery {
     /**
      * Query for creating a new table within a database, with an id value that automatically increments. Requires a
      * "Table Name" parameter for the query to successfully execute.
@@ -32,11 +32,11 @@ public enum SQLGeneralQuery {
     private final String sql;
 
     /**
-     * Constructor which initilises the sql string for each enum.
+     * Constructor which initializes the sql string for each enum.
      * @param sql The sql string for enum.
      */
 
-    SQLGeneralQuery(String sql) {
+    SqlGeneralQuery(String sql) {
         this.sql = sql;
     }
 }

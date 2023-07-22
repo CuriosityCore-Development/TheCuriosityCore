@@ -26,7 +26,7 @@ public class SqlRow {
      */
     public SqlRow(Object[] rowData, int rowIndex){
         this.rowData = rowData;
-        this.rowIndex =rowIndex;
+        this.rowIndex = rowIndex;
     }
 
 }

@@ -7,10 +7,10 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- * Utility class used to initialise the datasource for a Sql database. Doing so by grabbing connection credentials from
+ * Utility class used to initialise the datasource for a SQL database. Doing so by grabbing connection credentials from
  * a designated configuration file for the plugin.
  */
-public abstract class SQLSourceInit {
+public abstract class SqlSourceInit {
     /**
      * Get a new data source from a specified configuration file.
      * @param configurationFile The configuration file containing the credential data.

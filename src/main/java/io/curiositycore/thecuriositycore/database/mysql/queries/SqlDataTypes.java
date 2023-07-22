@@ -168,7 +168,7 @@ public enum SqlDataTypes {
      * A year in four-digit format. Values allowed in four-digit format: 1901 to 2155, and 0000.
      * MySQL 8.0 does not support year in two-digit format.
      */
-    YEAR("YEAR(%s)",false,false, Year.class);
+    YEAR("YEAR",false,false, Year.class);
 
     /**
      * The string of the datatype, lacking its parameters.
