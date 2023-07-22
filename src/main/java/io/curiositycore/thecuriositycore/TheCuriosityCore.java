@@ -5,34 +5,19 @@ import io.curiositycore.thecuriositycore.configurations.CachedConfigManager;
 import io.curiositycore.thecuriositycore.configurations.test.configs.managers.ManagerTest;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.java.JavaPluginLoader;
 
-import java.io.File;
-import java.util.Objects;
 
 public final class TheCuriosityCore extends JavaPlugin {
+    @Getter
+    private FileConfiguration fileConfiguration;
 
-    private final boolean unitTest;
-
-    }
-
-    protected TheCuriosityCore(
-            JavaPluginLoader loader,
-            PluginDescriptionFile description,
-            File dataFolder,
-            File file) {
-        super(loader, description, dataFolder, file);
-        unitTest = true;
-    }
     @Override
     public void onEnable() {
+        this.fileConfiguration = this.getConfig();
     }
 
     @Override
     public void onDisable(){ 
     }
 
-    public CachedConfigManager getConfigManager(){
-        return new ManagerTest(this);
-    }
 }
