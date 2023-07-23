@@ -1,12 +1,14 @@
 package io.curiositycore.thecuriositycore.database.mysql.queries;
 
+import io.curiositycore.thecuriositycore.database.mysql.table.SqlColumn;
+import io.curiositycore.thecuriositycore.database.mysql.table.SqlRow;
 import org.bukkit.Bukkit;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Utility class responsible for querying a SQL datasource for the purposes of creating, manipulating or retrieving table
@@ -57,6 +59,55 @@ public class SqlQueries {
         String statement = String.format(SqlGeneralQuery.INSERT_TABLE_VALUE.getSql(), tableName, columns, placeholders);
         executeWithParams(statement,dataSource, values);
     }
+    public static String getTableName(String tableName){
+        //TODO Complete query method.
+        return null;
+    }
+    public static int getTableSize(String tableName,DataSource dataSource){
+        String statement = String.format(SqlGeneralQuery.GET_TABLE_SIZE.getSql(),tableName);
+        try(ResultSet resultSet = retrieveSqlDataWithoutParams(statement,dataSource)){
+            return resultSet.getInt("tableSize");
+        }
+        catch(SQLException exception){
+            throw new RuntimeException("Retrieval of table size was not successful!");
+        }
+    }
+
+    /**
+     * Gets all the rows within the specified table.
+     * @param tableName The name of the table.
+     * @param dataSource The data source where the table is located.
+     * @return The rows of the table.
+     */
+    public static List<SqlRow> getRowData(String tableName, DataSource dataSource) throws SQLException {
+        List<SqlRow> sqlRows = new ArrayList<>();
+        String statement = String.format(SqlGeneralQuery.GET_TABLE_ROWS.getSql(),tableName);
+
+        ResultSet resultSet = retrieveSqlDataWithoutParams(statement,dataSource);
+        int columnCount = resultSet.getMetaData().getColumnCount();
+
+        while(resultSet.next()){
+
+            Object[] rowData = new Object[columnCount];
+            for (int i = 1; i <= columnCount; i++) {
+                rowData[i - 1] = resultSet.getObject(i);
+            }
+            sqlRows.add( new SqlRow(rowData,sqlRows.size()+1));
+        }
+
+        return sqlRows;
+    }
+
+    public static ResultSet retrieveSqlDataWithoutParams(String statement,DataSource dataSource){
+        try(Connection connection = dataSource.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(statement)){
+            return preparedStatement.executeQuery();
+        }
+        catch (SQLException e) {
+            throw new RuntimeException("Database operation failed", e);
+        }
+    }
+
 
     /**
      * Execution of an SQL query with no parameters.
@@ -69,7 +120,7 @@ public class SqlQueries {
             preparedStatement.executeUpdate();
         }
         catch (SQLException e) {
-            throw new RuntimeException("Database operation failed", e);
+            throw new RuntimeException("Database value retrieval failed", e);
         }
 
     }

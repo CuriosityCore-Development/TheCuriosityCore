@@ -5,6 +5,7 @@ import io.curiositycore.thecuriositycore.database.mysql.queries.SqlDataTypes;
 import io.curiositycore.thecuriositycore.database.mysql.queries.SqlQueries;
 
 import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,19 +40,41 @@ public abstract class BaseSqlTable implements Table {
      * The constructor that initialises the datasource for the table.
      * @param dataSourceForTable The datasource the table is to reside in.
      */
-    protected BaseSqlTable(DataSource dataSourceForTable){
+    protected BaseSqlTable(DataSource dataSourceForTable, String tableName){
         this.dataSourceForTable = dataSourceForTable;
-    }
-
-    //TODO This needs to be done when we add the full merge (due to needing other library packages to complete.
-    @Override
-    public void initTableFromExisting() {
+        this.tableName = tableName;
+        this.columnsInTable = initColumns();
 
     }
 
-    @Override
-    public void createTableInDataBase(String tableName) {
-        SqlQueries.createNewTable(tableName,dataSourceForTable);
+    /**
+     * Initialises the table. Creation is determined by if the table already exists. If existing, its values are queried
+     * and used for construction. If it does not, a new table with the user-defined columns are constructed.
+     */
+    protected void initTable(){
+        if(SqlQueries.getTableName(this.tableName) != null){
+            rowList = setRowList();
+            return;
+        }
+        SqlQueries.createNewTable(this.tableName,this.dataSourceForTable);
+        initColumns();
+    }
+
+    /**
+     * Initialises the columns of the table,in the event that the table
+     */
+    protected abstract SqlColumn[] initColumns();
+
+    /**
+     * Sets the row data of the table via existing values within the SQL database.
+     * @return The row data from the existing table.
+     */
+    protected List<SqlRow> setRowList(){
+        try{
+            return SqlQueries.getRowData(this.tableName,dataSourceForTable);
+        }catch (SQLException exception){
+         throw new RuntimeException("Error in retrieving data!");
+        }
     }
 
     @Override
@@ -62,8 +85,6 @@ public abstract class BaseSqlTable implements Table {
             throw new RuntimeException("The row was not added as it's data types do not match that of the table's" +
                     "columns!");
         }
-        // TODO: This needs adding to updateTableInDatabase() method
-        SqlQueries.insertValuesIntoTable(this.tableName,this.dataSourceForTable,columnNames,rowToAdd);
         this.rowList.add(new SqlRow(rowToAdd,this.rowList.size()+1));
 
     }
@@ -80,15 +101,16 @@ public abstract class BaseSqlTable implements Table {
 
     }
 
-    //TODO This needs to be done when we add the full merge (due to needing other library packages to complete.
+
+    /**
+     * Updates the SQL database with any values in the cache that have currently not been recorded.
+     */
     @Override
     public void updateTableInDataBase() {
-
-    }
-
-    @Override
-    public int getColumnAmount() {
-        return this.columnsInTable.length;
+        int databaseTableSize = SqlQueries.getTableSize(this.tableName,this.dataSourceForTable);
+        for(int i = databaseTableSize - this.rowList.size() - 1; i <= this.rowList.size()-1 ; i++)
+        SqlQueries.insertValuesIntoTable(this.tableName,
+                                         this.dataSourceForTable, getColumnNames(), this.rowList.get(i).getRowData());
     }
 
     /**
