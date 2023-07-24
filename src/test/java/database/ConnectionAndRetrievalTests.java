@@ -22,7 +22,8 @@ public class ConnectionAndRetrievalTests {
             Assert.assertTrue(connection.isValid(5));
         }
     }
-
+    //TODO Next commit will focus on completing connection and creation tests, and beginning data retrieval addition
+    //     and appendage tests.
     @Test
     public void createTable() throws SQLException {
         TestTable testTable = new TestTable(this.dataSource,"CreationTestTable");
