@@ -51,7 +51,7 @@ public class SqlQueries {
      * @param columnNames The name of the columns.
      */
     public static void updateRow(String tableName, DataSource dataSource, SqlRow rowToUpdate, String[] columnNames){
-        String formattedValuePlaceholders = String.join("= ? , ", columnNames);
+        String formattedValuePlaceholders = String.join(" = ? , ", columnNames)+ "= ?";
         String formattedStatement = String.format(SqlGeneralQuery.UPDATE_ROW.getSql(),tableName, formattedValuePlaceholders, "id =" + rowToUpdate.getRowIndex());
         executeWithParams(formattedStatement, dataSource,rowToUpdate.getRowData());
     }

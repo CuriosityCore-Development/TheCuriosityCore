@@ -28,6 +28,7 @@ public class SqlTests {
     public void createTable() throws SQLException {
         TestTable testTable = new TestTable(this.dataSource,"CreationTestTable");
 
+        //----------------------------------------------
         Assert.assertEquals(3,testTable.getColumnsInTable().length);
         Assert.assertEquals("TestChar",testTable.getColumnsInTable()[0].getColumnName());
         Assert.assertEquals(0,testTable.getCurrentRows());
@@ -44,6 +45,8 @@ public class SqlTests {
         int createTest = testTable.getCurrentRows();
         testTable.deleteRow(testTable.getRowList().get(0).getRowIndex());
         int deleteTest = testTable.getCurrentRows();
+
+        //----------------------------------------------
         Assert.assertEquals(1,createTest);
         Assert.assertEquals(0,deleteTest);
 
@@ -68,6 +71,8 @@ public class SqlTests {
         testTable.deleteRow(testTable.getRowList().get(0).getRowIndex());
         testTable.deleteRow(testTable.getRowList().get(0).getRowIndex());
         int deleteTest = testTable.getCurrentRows();
+
+        //----------------------------------------------
         Assert.assertEquals(4,createTest);
         Assert.assertEquals(0,deleteTest);
     }
@@ -76,12 +81,16 @@ public class SqlTests {
         TestTable testTable = new TestTable(this.dataSource,"CreationTestTable");
         Object[] newRowObject = new Object[]{10,10,false};
 
+
+        //----------------------------------------------
         Assert.assertThrows(NoSuchElementException.class,() -> {testTable.insertRow(newRowObject);});
     }
 
     @Test
     public void deleteRowFailure(){
         TestTable testTable = new TestTable(this.dataSource,"CreationTestTable");
+
+        //----------------------------------------------
         Assert.assertThrows(RuntimeException.class,() -> {testTable.deleteRow(10);});
     }
 
@@ -90,9 +99,26 @@ public class SqlTests {
         TestTable testTable = new TestTable(this.dataSource,"CreationTestTable");
         Object[] newRowObject = new Object[]{"TestCharVal",10,false};
         testTable.insertRow(newRowObject);
+
+        //----------------------------------------------
         Assert.assertEquals(newRowObject[0],testTable.getTestChar(1));
         Assert.assertEquals(newRowObject[1],testTable.getTestInteger(1));
         Assert.assertEquals(newRowObject[2],testTable.getTestBoolean(1));
+    }
+
+    @Test
+    public void updateRowData(){
+        TestTable testTable = new TestTable(this.dataSource,"CreationTestTable");
+        Object[] newRowObject = new Object[]{"TestCharVal",10,false};
+        testTable.insertRow(newRowObject);
+        testTable.updateTableInDataBase();
+        Object[] updatedRowObject = new Object[]{"TestCharVal",30,false};
+        testTable.updateRow(1,updatedRowObject);
+        int testInt = testTable.getTestInteger(1);
+        testTable.deleteRow(1);
+
+
+        Assert.assertEquals(updatedRowObject[1],testInt);
     }
 
         }
