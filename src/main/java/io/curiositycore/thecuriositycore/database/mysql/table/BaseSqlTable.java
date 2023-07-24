@@ -23,6 +23,7 @@ public abstract class BaseSqlTable implements Table {
     /**
      * The name of the table.
      */
+    @Getter
     protected String tableName;
     /**
      * The datasource that the table is stored within.
