@@ -24,7 +24,8 @@ public enum SqlGeneralQuery {
      * values" for the query to successfully execute.
      */
     INSERT_TABLE_VALUE("INSERT INTO %s (%s) VALUES (%s)"),
-    GET_TABLE_NAME("SELECT table_name FROM information_schema.tables WHERE table_schema = %s"),
+    UPDATE_ROW("UPDATE %s SET %s WHERE %s"),
+    GET_TABLE_NAME("SELECT * from %s"),
     GET_TABLE_SIZE("SELECT COUNT (*) as tableSize FROM information_schema.tables WHERE table_schema = %s AND table_name = s%"),
     GET_TABLE_COLUMNS("SELECT column_name, data_type,character_maximum_length FROM information_schema.columns" +
             " WHERE table_schema = %s AND table_name = %s"),

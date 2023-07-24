@@ -1,6 +1,5 @@
 package io.curiositycore.thecuriositycore.database.mysql.queries;
 
-import io.curiositycore.thecuriositycore.database.mysql.table.SqlColumn;
 import io.curiositycore.thecuriositycore.database.mysql.table.SqlRow;
 import org.bukkit.Bukkit;
 
@@ -40,9 +39,22 @@ public class SqlQueries {
      * @param dataTypeString The string that represents the datasource.
      */
     public static void addColumnToTable(String tableName, String columnName,DataSource dataSource, String dataTypeString){
-        executeWithoutParams(String.format(SqlGeneralQuery.APPEND_COLUMN_TO_TABLE.getSql(),columnName,dataTypeString),dataSource);
+        executeWithoutParams(String.format(SqlGeneralQuery.APPEND_COLUMN_TO_TABLE.getSql(), tableName,columnName,dataTypeString),dataSource);
     }
 
+    /**
+     * Updates the row of an SQL table. Creates a statement with enough "?" placeholders to accommodate the number of
+     * columns in the table.
+     * @param tableName The name of the table to update the row of.
+     * @param datasource The datasource where the table is located.
+     * @param rowToUpdate The SqlRow to update.
+     * @param columnNames The name of the columns.
+     */
+    public static void updateRow(String tableName, DataSource datasource, SqlRow rowToUpdate, String[] columnNames){
+        String formattedValuePlaceholders = String.join("= ? , ", columnNames);
+        String formattedStatement = String.format(SqlGeneralQuery.UPDATE_ROW.getSql(),tableName, formattedValuePlaceholders, "id =" + rowToUpdate.getRowIndex());
+        executeWithParams(formattedStatement, datasource,rowToUpdate.getRowData());
+    }
     /**
      * Inserts a row of values into an existing table.
      * @param tableName The name of the table to add the row of values to.
@@ -59,18 +71,30 @@ public class SqlQueries {
         String statement = String.format(SqlGeneralQuery.INSERT_TABLE_VALUE.getSql(), tableName, columns, placeholders);
         executeWithParams(statement,dataSource, values);
     }
-    public static String getTableName(String tableName){
-        //TODO Complete query method.
-        return null;
+    public static boolean tableExistsInDatabase(String tableName, DataSource dataSource) {
+        String formattedStatement = String.format(SqlGeneralQuery.GET_TABLE_NAME.getSql(),tableName);
+        try {
+            List<Object[]> rows = retrieveSqlDataWithoutParams(formattedStatement, dataSource);
+            return true;
+        }
+        catch(SQLException sqlException){
+            sqlException.printStackTrace();
+            return false;
+        }
     }
+
     public static int getTableSize(String tableName,DataSource dataSource){
         String statement = String.format(SqlGeneralQuery.GET_TABLE_SIZE.getSql(),tableName);
-        try(ResultSet resultSet = retrieveSqlDataWithoutParams(statement,dataSource)){
-            return resultSet.getInt("tableSize");
+        try{
+            List<Object[]> rows = retrieveSqlDataWithoutParams(statement,dataSource);
+            return rows.size();
         }
-        catch(SQLException exception){
-            throw new RuntimeException("Retrieval of table size was not successful!");
+        catch(SQLException e){
+            e.printStackTrace();
+            return 0;
         }
+
+
     }
 
     /**
@@ -83,28 +107,42 @@ public class SqlQueries {
         List<SqlRow> sqlRows = new ArrayList<>();
         String statement = String.format(SqlGeneralQuery.GET_TABLE_ROWS.getSql(),tableName);
 
-        ResultSet resultSet = retrieveSqlDataWithoutParams(statement,dataSource);
-        int columnCount = resultSet.getMetaData().getColumnCount();
-
-        while(resultSet.next()){
-
-            Object[] rowData = new Object[columnCount];
-            for (int i = 1; i <= columnCount; i++) {
-                rowData[i - 1] = resultSet.getObject(i);
+        List<Object[]> resultSet = retrieveSqlDataWithoutParams(statement,dataSource);
+            for(Object[] row : resultSet){
+                sqlRows.add(new SqlRow(row,resultSet.indexOf(row)));
             }
-            sqlRows.add( new SqlRow(rowData,sqlRows.size()+1));
-        }
-
-        return sqlRows;
+            return sqlRows;
     }
 
-    public static ResultSet retrieveSqlDataWithoutParams(String statement,DataSource dataSource){
-        try(Connection connection = dataSource.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(statement)){
-            return preparedStatement.executeQuery();
+    public static List<Object[]> retrieveSqlDataWithoutParams(String statement, DataSource dataSource) throws SQLException {
+        List<Object[]> resultList = new ArrayList<>();
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(statement);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            ResultSetMetaData metaData = resultSet.getMetaData();
+            int columnCount = metaData.getColumnCount();
+
+            while (resultSet.next()) {
+                Object[] row = new Object[columnCount];
+                for (int i = 1; i <= columnCount; i++) {
+                    row[i - 1] = resultSet.getObject(i);
+                }
+                resultList.add(row);
+            }
+
         }
-        catch (SQLException e) {
-            throw new RuntimeException("Database operation failed", e);
+
+        return resultList;
+    }
+
+
+    private static String getSchema(DataSource dataSource){
+        try(Connection connection = dataSource.getConnection()){
+            return connection.getSchema();
+        } catch (SQLException e) {
+            throw new RuntimeException("Schema could not be found");
         }
     }
 
@@ -120,6 +158,7 @@ public class SqlQueries {
             preparedStatement.executeUpdate();
         }
         catch (SQLException e) {
+            e.printStackTrace();
             throw new RuntimeException("Database value retrieval failed", e);
         }
 

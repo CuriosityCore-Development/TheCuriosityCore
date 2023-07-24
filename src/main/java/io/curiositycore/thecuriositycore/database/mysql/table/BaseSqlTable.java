@@ -3,6 +3,7 @@ package io.curiositycore.thecuriositycore.database.mysql.table;
 import io.curiositycore.thecuriositycore.database.Table;
 import io.curiositycore.thecuriositycore.database.mysql.queries.SqlDataTypes;
 import io.curiositycore.thecuriositycore.database.mysql.queries.SqlQueries;
+import lombok.Getter;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -31,6 +32,7 @@ public abstract class BaseSqlTable implements Table {
      */
     protected List<SqlRow> rowList = new ArrayList<>();
 
+    @Getter
     /**
      * The columns within the table, containing both their names and variable types.
      */
@@ -43,8 +45,7 @@ public abstract class BaseSqlTable implements Table {
     protected BaseSqlTable(DataSource dataSourceForTable, String tableName){
         this.dataSourceForTable = dataSourceForTable;
         this.tableName = tableName;
-        this.columnsInTable = initColumns();
-
+        initTable();
     }
 
     /**
@@ -52,18 +53,20 @@ public abstract class BaseSqlTable implements Table {
      * and used for construction. If it does not, a new table with the user-defined columns are constructed.
      */
     protected void initTable(){
-        if(SqlQueries.getTableName(this.tableName) != null){
-            rowList = setRowList();
+        boolean isInDatabase  = SqlQueries.tableExistsInDatabase(this.tableName,this.dataSourceForTable);
+        if(!isInDatabase){
+            this.rowList = setRowList();
+            initColumns(false);
             return;
         }
         SqlQueries.createNewTable(this.tableName,this.dataSourceForTable);
-        initColumns();
+        initColumns(true);
     }
 
     /**
      * Initialises the columns of the table,in the event that the table
      */
-    protected abstract SqlColumn[] initColumns();
+    protected abstract SqlColumn[] initColumns(boolean tableExistsInDatabase);
 
     /**
      * Sets the row data of the table via existing values within the SQL database.
@@ -89,10 +92,11 @@ public abstract class BaseSqlTable implements Table {
 
     }
 
-    //TODO This needs to be done when we add the full merge (due to needing other library packages to complete.
     @Override
     public void updateRow(int rowIndex, Object[] updatedRow) {
-
+        SqlRow rowToUpdate = rowList.get(rowIndex-1);
+        rowToUpdate.setRowData(updatedRow);
+        SqlQueries.updateRow(this.tableName,dataSourceForTable,rowToUpdate,getColumnNames());
     }
 
     //TODO This needs to be done when we add the full merge (due to needing other library packages to complete.
@@ -113,6 +117,20 @@ public abstract class BaseSqlTable implements Table {
                                          this.dataSourceForTable, getColumnNames(), this.rowList.get(i).getRowData());
     }
 
+
+    /**
+     * Add a new column to the table, with a {@linkplain
+     * io.curiositycore.thecuriositycore.database.mysql.queries.SqlDataTypes datatype} that has a no parameter.
+     * @param columnName The name of the column to add.
+     * @param dataType The column's acceptable value data type.
+     */
+    protected void addColumnToTable(String columnName, SqlDataTypes dataType, boolean tableExistsInDatabase){
+        String dataTypeString = dataType.getDataType();
+        if(!tableExistsInDatabase){
+            SqlQueries.addColumnToTable(this.tableName,columnName,this.dataSourceForTable,dataTypeString);
+        }
+        addColumnToCache(new SqlColumn(columnName,dataType));
+    }
     /**
      * Add a new column to the table, with a {@linkplain
      * io.curiositycore.thecuriositycore.database.mysql.queries.SqlDataTypes datatype} that has a singular parameter.
@@ -120,9 +138,11 @@ public abstract class BaseSqlTable implements Table {
      * @param dataType The column's acceptable value data type.
      * @param param The parameter of the data type.
      */
-    protected void addColumnToTable(String columnName, SqlDataTypes dataType, int param){
+    protected void addColumnToTable(String columnName, SqlDataTypes dataType, int param, boolean tableExistsInDatabase){
         String dataTypeString = dataType.getDataType(param);
-        SqlQueries.addColumnToTable(this.tableName,columnName,this.dataSourceForTable,dataTypeString);
+        if(!tableExistsInDatabase) {
+            SqlQueries.addColumnToTable(this.tableName, columnName, this.dataSourceForTable, dataTypeString);
+        }
         addColumnToCache(new SqlColumn(columnName,dataType));
     }
 
@@ -134,9 +154,11 @@ public abstract class BaseSqlTable implements Table {
      * @param firstParam The first parameter of the data type.
      * @param secondParam The second parameter of the data type.
      */
-    protected void addColumnToTable(String columnName, SqlDataTypes dataType, int firstParam, int secondParam){
+    protected void addColumnToTable(String columnName, SqlDataTypes dataType, int firstParam, int secondParam, boolean tableExistsInDatabase){
         String dataTypeString = dataType.getDataType(firstParam,secondParam);
-        SqlQueries.addColumnToTable(this.tableName,columnName,this.dataSourceForTable,dataTypeString);
+        if(!tableExistsInDatabase) {
+            SqlQueries.addColumnToTable(this.tableName, columnName, this.dataSourceForTable, dataTypeString);
+        }
         addColumnToCache(new SqlColumn(columnName,dataType));
 
     }
@@ -148,6 +170,7 @@ public abstract class BaseSqlTable implements Table {
     protected void addColumnToCache(SqlColumn sqlColumnToAdd){
         if(this.columnsInTable == null){
             this.columnsInTable = new SqlColumn[]{sqlColumnToAdd};
+            return;
         }
 
         SqlColumn[] newArrayProxy = new SqlColumn[columnsInTable.length+1];
