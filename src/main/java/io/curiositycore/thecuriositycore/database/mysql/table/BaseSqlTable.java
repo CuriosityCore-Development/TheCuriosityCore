@@ -206,7 +206,7 @@ public abstract class BaseSqlTable implements Table {
      * Gets the names of each column in this table.
      * @return The names of each column in this table.
      */
-    private String[] getColumnNames(){
+    protected String[] getColumnNames(){
         return Arrays.stream(this.columnsInTable).map(SqlColumn::getColumnName).toArray(String[]::new);
     }
 
@@ -214,7 +214,7 @@ public abstract class BaseSqlTable implements Table {
      * Gets the data types of each column in this table.
      * @return The data types of each column in this table.
      */
-    private SqlDataTypes[] getDataTypes(){
+    protected SqlDataTypes[] getDataTypes(){
         return Arrays.stream(this.columnsInTable).map(SqlColumn::getDataType).toArray(SqlDataTypes[]::new);
     }
 
@@ -225,7 +225,7 @@ public abstract class BaseSqlTable implements Table {
      * @param columnTypes The data types of each column within the table.
      * @return True if the value's data types match that of the columns, false if they do not.
      */
-    private boolean areCorrectDataTypes(Object[] valuesToCheck, SqlDataTypes[] columnTypes ){
+    protected boolean areCorrectDataTypes(Object[] valuesToCheck, SqlDataTypes[] columnTypes ){
 
         for(int i = 0; i <=valuesToCheck.length-1; i++){
             Class<?> classOfDataType = columnTypes[i].getTypeClass();
@@ -235,4 +235,31 @@ public abstract class BaseSqlTable implements Table {
         }
         return true;
     }
+
+    /**
+     * Gets the cast value of the Sql row. This functionality is cruical to ensure correct retreival of data from
+     * database rows.
+     * @param clazz The class of the value to retrieve.
+     * @param object The object to be cast.
+     * @return The cast value of the retrieved row data.
+     * @param <T> The generic of the class of the object to retrieve.
+     */
+    protected<T> T getCastedValue(Class<T> clazz, Object object){
+        if(clazz.isInstance(object)){
+            return clazz.cast(object);
+        }
+        return null;
+    }
+
+    /**
+     * Gets the row within the sqlRow field, based on the row's index.
+     * @param rowIndex The index of the row to retrieve.
+     * @return The SqlRow to retrieve.
+     */
+    protected SqlRow getRowBaseOnIndex(int rowIndex){
+        return this.getRowList().stream().filter(sqlRow -> sqlRow.getRowIndex() == rowIndex).
+                findFirst().
+                orElseThrow(NoSuchElementException::new);
+    }
+
 }

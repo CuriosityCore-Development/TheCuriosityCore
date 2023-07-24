@@ -46,20 +46,32 @@ public class SqlQueries {
      * Updates the row of an SQL table. Creates a statement with enough "?" placeholders to accommodate the number of
      * columns in the table.
      * @param tableName The name of the table to update the row of.
-     * @param datasource The datasource where the table is located.
+     * @param dataSource The datasource where the table is located.
      * @param rowToUpdate The SqlRow to update.
      * @param columnNames The name of the columns.
      */
-    public static void updateRow(String tableName, DataSource datasource, SqlRow rowToUpdate, String[] columnNames){
+    public static void updateRow(String tableName, DataSource dataSource, SqlRow rowToUpdate, String[] columnNames){
         String formattedValuePlaceholders = String.join("= ? , ", columnNames);
         String formattedStatement = String.format(SqlGeneralQuery.UPDATE_ROW.getSql(),tableName, formattedValuePlaceholders, "id =" + rowToUpdate.getRowIndex());
-        executeWithParams(formattedStatement, datasource,rowToUpdate.getRowData());
+        executeWithParams(formattedStatement, dataSource,rowToUpdate.getRowData());
     }
 
+    /**
+     * Deletes a row within the SQL database table, based on the index id of the row.
+     * @param tableName The name of the table to delete the row from.
+     * @param dataSource The datasource where the table is located.
+     * @param indexOfRowToDelete The index id of the row to delete.
+     */
     public static void deleteRow(String tableName, DataSource dataSource, int indexOfRowToDelete){
         String formattedStatementString = String.format(SqlGeneralQuery.DELETE_ROW.getSql(),tableName,indexOfRowToDelete);
         executeWithoutParams(formattedStatementString,dataSource);
     }
+
+    /**
+     * Resets the id indexes of the database to 1. This is doen when all id's within a table have been deleted.
+     * @param tableName The name of the table to reset the ids for.
+     * @param dataSource The data source where the table is located.
+     */
     public static void resetIds(String tableName, DataSource dataSource){
         String formattedStatementString = String.format(SqlGeneralQuery.RESET_ID_INCREMENTS.getSql(),tableName);
         executeWithoutParams(formattedStatementString,dataSource);
@@ -81,8 +93,15 @@ public class SqlQueries {
         String statement = String.format(SqlGeneralQuery.INSERT_TABLE_VALUE.getSql(), tableName, columns, placeholders);
         executeWithParams(statement,dataSource, values);
     }
+
+    /**
+     * Checks to see if the table exists within the SQL database.
+     * @param tableName The name of the table to check.
+     * @param dataSource The data source to check.
+     * @return True if the table exists within the database, false if it does not.
+     */
     public static boolean tableExistsInDatabase(String tableName, DataSource dataSource) {
-        String formattedStatement = String.format(SqlGeneralQuery.GET_TABLE_NAME.getSql(),tableName);
+        String formattedStatement = String.format(SqlGeneralQuery.GET_ALL_TABLE_DATA.getSql(),tableName);
         try {
             List<Object[]> rows = retrieveSqlDataWithoutParams(formattedStatement, dataSource);
             return true;
@@ -110,6 +129,13 @@ public class SqlQueries {
             return sqlRows;
     }
 
+    /**
+     * Retreives SQL data from a table without any parameters.
+     * @param statement The statement to query the database with.
+     * @param dataSource The datasource of the table to retrieve data from.
+     * @return The data to retrieve as a List of object arrays.
+     * @throws SQLException Exception that will occur if the query is not succesful.
+     */
     public static List<Object[]> retrieveSqlDataWithoutParams(String statement, DataSource dataSource) throws SQLException {
         List<Object[]> resultList = new ArrayList<>();
 

@@ -83,9 +83,16 @@ public class SqlTests {
     public void deleteRowFailure(){
         TestTable testTable = new TestTable(this.dataSource,"CreationTestTable");
         Assert.assertThrows(RuntimeException.class,() -> {testTable.deleteRow(10);});
-
     }
 
-
+    @Test
+    public void getDataTest(){
+        TestTable testTable = new TestTable(this.dataSource,"CreationTestTable");
+        Object[] newRowObject = new Object[]{"TestCharVal",10,false};
+        testTable.insertRow(newRowObject);
+        Assert.assertEquals(newRowObject[0],testTable.getTestChar(1));
+        Assert.assertEquals(newRowObject[1],testTable.getTestInteger(1));
+        Assert.assertEquals(newRowObject[2],testTable.getTestBoolean(1));
+    }
 
         }

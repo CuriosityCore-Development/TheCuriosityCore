@@ -13,12 +13,12 @@ public class SqlColumn {
     /**
      * The name of the column.
      */
-    String columnName;
+    private String columnName;
 
     /**
      * The data type of values within this column.
      */
-    SqlDataTypes dataType;
+    private SqlDataTypes dataType;
 
     /**
      * Constructor which initialises the name and data type of the column.
