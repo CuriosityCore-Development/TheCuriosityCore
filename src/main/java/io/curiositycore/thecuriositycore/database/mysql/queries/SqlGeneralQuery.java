@@ -25,6 +25,8 @@ public enum SqlGeneralQuery {
      */
     INSERT_TABLE_VALUE("INSERT INTO %s (%s) VALUES (%s)"),
     UPDATE_ROW("UPDATE %s SET %s WHERE %s"),
+    DELETE_ROW("DELETE FROM %s WHERE id = %s"),
+    RESET_ID_INCREMENTS("ALTER TABLE %s AUTO_INCREMENT  = 1"),
     GET_TABLE_NAME("SELECT * from %s"),
     GET_TABLE_COLUMNS("SELECT column_name, data_type,character_maximum_length FROM information_schema.columns" +
             " WHERE table_schema = %s AND table_name = %s"),

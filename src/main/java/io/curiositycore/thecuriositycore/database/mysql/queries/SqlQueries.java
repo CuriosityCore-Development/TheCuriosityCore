@@ -55,6 +55,16 @@ public class SqlQueries {
         String formattedStatement = String.format(SqlGeneralQuery.UPDATE_ROW.getSql(),tableName, formattedValuePlaceholders, "id =" + rowToUpdate.getRowIndex());
         executeWithParams(formattedStatement, datasource,rowToUpdate.getRowData());
     }
+
+    public static void deleteRow(String tableName, DataSource dataSource, int indexOfRowToDelete){
+        String formattedStatementString = String.format(SqlGeneralQuery.DELETE_ROW.getSql(),tableName,indexOfRowToDelete);
+        executeWithoutParams(formattedStatementString,dataSource);
+    }
+    public static void resetIds(String tableName, DataSource dataSource){
+        String formattedStatementString = String.format(SqlGeneralQuery.RESET_ID_INCREMENTS.getSql(),tableName);
+        executeWithoutParams(formattedStatementString,dataSource);
+    }
+
     /**
      * Inserts a row of values into an existing table.
      * @param tableName The name of the table to add the row of values to.
@@ -95,7 +105,7 @@ public class SqlQueries {
 
         List<Object[]> resultSet = retrieveSqlDataWithoutParams(statement,dataSource);
             for(Object[] row : resultSet){
-                sqlRows.add(new SqlRow(row,resultSet.indexOf(row)));
+                sqlRows.add(new SqlRow(row,resultSet.indexOf(row)+1));
             }
             return sqlRows;
     }
@@ -121,15 +131,6 @@ public class SqlQueries {
         }
 
         return resultList;
-    }
-
-
-    private static String getSchema(DataSource dataSource){
-        try(Connection connection = dataSource.getConnection()){
-            return connection.getSchema();
-        } catch (SQLException e) {
-            throw new RuntimeException("Schema could not be found");
-        }
     }
 
 

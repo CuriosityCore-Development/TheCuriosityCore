@@ -4,12 +4,14 @@ import io.curiositycore.thecuriositycore.database.Table;
 import io.curiositycore.thecuriositycore.database.mysql.queries.SqlDataTypes;
 import io.curiositycore.thecuriositycore.database.mysql.queries.SqlQueries;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Abstract class representing the generalisation of a table stored within a database. This class acts as a localised
@@ -30,14 +32,16 @@ public abstract class BaseSqlTable implements Table {
     /**
      * The list of rows within the table.
      */
+    @Getter
     protected List<SqlRow> rowList = new ArrayList<>();
     @Getter
     protected int currentRows = 0;
 
-    @Getter
+
     /**
      * The columns within the table, containing both their names and variable types.
      */
+    @Getter
     protected SqlColumn[] columnsInTable ;
 
     /**
@@ -88,7 +92,7 @@ public abstract class BaseSqlTable implements Table {
         String[] columnNames = getColumnNames();
         SqlDataTypes[] dataTypes = getDataTypes();
         if(!areCorrectDataTypes(rowToAdd,dataTypes)){
-            throw new RuntimeException("The row was not added as it's data types do not match that of the table's" +
+            throw new NoSuchElementException("The row was not added as it's data types do not match that of the table's" +
                     "columns!");
         }
         this.rowList.add(new SqlRow(rowToAdd,this.rowList.size()+1));
@@ -102,10 +106,24 @@ public abstract class BaseSqlTable implements Table {
         SqlQueries.updateRow(this.tableName,dataSourceForTable,rowToUpdate,getColumnNames());
     }
 
-    //TODO This needs to be done when we add the full merge (due to needing other library packages to complete.
+
     @Override
     public void deleteRow(int rowIndex) {
+        SqlQueries.deleteRow(this.tableName,this.dataSourceForTable, rowIndex);
+        try {
+            this.rowList.remove(this.rowList.stream().
+                    filter(sqlRow -> sqlRow.rowIndex == rowIndex).
+                    findFirst().
+                    orElseThrow(NoSuchElementException::new));
 
+            this.currentRows = this.rowList.size();
+            if (currentRows == 0) {
+                SqlQueries.resetIds(this.tableName, this.dataSourceForTable);
+            }
+        }
+        catch(NoSuchElementException noSuchElementException){
+            throw new NoSuchElementException("The row with index: " + rowIndex + " does not exist within the database table!");
+        }
     }
 
 
