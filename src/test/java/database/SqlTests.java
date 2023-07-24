@@ -9,7 +9,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class ConnectionAndRetrievalTests {
+public class SqlTests {
     DataSource dataSource;
     @Before
     public void conditionInit() throws SQLException {
@@ -23,13 +23,24 @@ public class ConnectionAndRetrievalTests {
         }
     }
     //TODO Next commit will focus on completing connection and creation tests, and beginning data retrieval addition
-    //     and appendage tests.
+    //      and appendage tests.
     @Test
     public void createTable() throws SQLException {
         TestTable testTable = new TestTable(this.dataSource,"CreationTestTable");
         Assert.assertEquals(3,testTable.getColumnsInTable().length);
         Assert.assertEquals("TestChar",testTable.getColumnsInTable()[0].getColumnName());
-
+        Assert.assertEquals(0,testTable.getCurrentRows());
     }
 
-}
+    @Test
+    public void createRow(){
+        TestTable testTable = new TestTable(this.dataSource,"CreationTestTable");
+        Object[] newRowObject = new Object[]{"TestCharVal",10,false};
+        testTable.insertRow(newRowObject);
+        testTable.updateTableInDataBase();
+
+        Assert.assertEquals(1,testTable.getCurrentRows());
+        //TODO delete the rows after test
+    }
+
+        }

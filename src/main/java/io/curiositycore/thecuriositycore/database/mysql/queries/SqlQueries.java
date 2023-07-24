@@ -63,7 +63,7 @@ public class SqlQueries {
      * @param values The values of the row to add.
      */
     public static void insertValuesIntoTable(String tableName,DataSource dataSource, String[] valueIds, Object[] values){
-        if (equalIdAndValueLengths(valueIds,values)) {
+        if (!equalIdAndValueLengths(valueIds,values)) {
             return;
         }
         String columns = String.join(", ", valueIds);
@@ -78,24 +78,10 @@ public class SqlQueries {
             return true;
         }
         catch(SQLException sqlException){
-            sqlException.printStackTrace();
             return false;
         }
     }
 
-    public static int getTableSize(String tableName,DataSource dataSource){
-        String statement = String.format(SqlGeneralQuery.GET_TABLE_SIZE.getSql(),tableName);
-        try{
-            List<Object[]> rows = retrieveSqlDataWithoutParams(statement,dataSource);
-            return rows.size();
-        }
-        catch(SQLException e){
-            e.printStackTrace();
-            return 0;
-        }
-
-
-    }
 
     /**
      * Gets all the rows within the specified table.

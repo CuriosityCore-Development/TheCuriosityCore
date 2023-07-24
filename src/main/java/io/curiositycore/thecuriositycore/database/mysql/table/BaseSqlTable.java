@@ -31,6 +31,8 @@ public abstract class BaseSqlTable implements Table {
      * The list of rows within the table.
      */
     protected List<SqlRow> rowList = new ArrayList<>();
+    @Getter
+    protected int currentRows = 0;
 
     @Getter
     /**
@@ -54,13 +56,14 @@ public abstract class BaseSqlTable implements Table {
      */
     protected void initTable(){
         boolean isInDatabase  = SqlQueries.tableExistsInDatabase(this.tableName,this.dataSourceForTable);
-        if(!isInDatabase){
+        if(isInDatabase){
             this.rowList = setRowList();
-            initColumns(false);
+            this.currentRows = rowList.size();
+            initColumns(true);
             return;
         }
         SqlQueries.createNewTable(this.tableName,this.dataSourceForTable);
-        initColumns(true);
+        initColumns(false);
     }
 
     /**
@@ -111,10 +114,13 @@ public abstract class BaseSqlTable implements Table {
      */
     @Override
     public void updateTableInDataBase() {
-        int databaseTableSize = SqlQueries.getTableSize(this.tableName,this.dataSourceForTable);
-        for(int i = databaseTableSize - this.rowList.size() - 1; i <= this.rowList.size()-1 ; i++)
-        SqlQueries.insertValuesIntoTable(this.tableName,
+
+        for(int i = this.currentRows; i <= this.rowList.size()-1 ; i++){
+            SqlQueries.insertValuesIntoTable(this.tableName,
                                          this.dataSourceForTable, getColumnNames(), this.rowList.get(i).getRowData());
+        }
+        this.currentRows = this.rowList.size();
+
     }
 
 
@@ -203,7 +209,7 @@ public abstract class BaseSqlTable implements Table {
      */
     private boolean areCorrectDataTypes(Object[] valuesToCheck, SqlDataTypes[] columnTypes ){
 
-        for(int i = 0; i <=valuesToCheck.length; i++){
+        for(int i = 0; i <=valuesToCheck.length-1; i++){
             Class<?> classOfDataType = columnTypes[i].getTypeClass();
             if (!classOfDataType.isInstance(valuesToCheck[i])) {
                 return false;
