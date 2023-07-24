@@ -24,11 +24,29 @@ public enum SqlGeneralQuery {
      * values" for the query to successfully execute.
      */
     INSERT_TABLE_VALUE("INSERT INTO %s (%s) VALUES (%s)"),
+    /**
+     * Update the row of a table. Usually done for plugins where the data of a row is subject to change (such as the
+     * name of a land claim for example). Requires the table name, placeholders for the parameters to change, and the
+     * id of the row.
+     */
     UPDATE_ROW("UPDATE %s SET %s WHERE %s"),
-    GET_TABLE_NAME("SELECT * from %s"),
-    GET_TABLE_SIZE("SELECT COUNT (*) as tableSize FROM information_schema.tables WHERE table_schema = %s AND table_name = s%"),
-    GET_TABLE_COLUMNS("SELECT column_name, data_type,character_maximum_length FROM information_schema.columns" +
-            " WHERE table_schema = %s AND table_name = %s"),
+    /**
+     * Delete the row of a table. Requires the table name and the index id of the row to delete..
+     */
+    DELETE_ROW("DELETE FROM %s WHERE id = %s"),
+    /**
+     * Resets the Index IDs to 1, usually called when a table has 0 rows after a deletion event. requires the table name.
+     */
+    RESET_ID_INCREMENTS("ALTER TABLE %s AUTO_INCREMENT  = 1"),
+
+    /**
+     * Gets all the data within a specific table. Is used typically onEnable as part of the checks for pre-existing
+     * tables. Requires the name of the table.
+     */
+    GET_ALL_TABLE_DATA("SELECT * from %s"),
+    /**
+     * Get all the rows of a table within a database. Requires the name of the table.
+     */
     GET_TABLE_ROWS("SELECT * FROM %s");
 
     /**

@@ -3,8 +3,10 @@ package database.table;
 import io.curiositycore.thecuriositycore.database.mysql.queries.SqlDataTypes;
 import io.curiositycore.thecuriositycore.database.mysql.table.BaseSqlTable;
 import io.curiositycore.thecuriositycore.database.mysql.table.SqlColumn;
+import io.curiositycore.thecuriositycore.database.mysql.table.SqlRow;
 
 import javax.sql.DataSource;
+import java.util.NoSuchElementException;
 
 public class TestTable extends BaseSqlTable {
     /**
@@ -16,6 +18,21 @@ public class TestTable extends BaseSqlTable {
     public TestTable(DataSource dataSourceForTable, String tableName) {
         super(dataSourceForTable, tableName);
     }
+    public String getTestChar(int rowIndex){
+        SqlRow rowToGetValueFrom = getRowBaseOnIndex(rowIndex);
+        return getCastedValue(String.class,rowToGetValueFrom.getRowData()[0]);
+    }
+
+    public int getTestInteger(int rowIndex){
+        SqlRow rowToGetValueFrom = getRowBaseOnIndex(rowIndex);
+        return getCastedValue(Integer.class,rowToGetValueFrom.getRowData()[1]);
+    }
+
+    public boolean getTestBoolean(int rowIndex){
+        SqlRow rowToGetValueFrom = getRowBaseOnIndex(rowIndex);
+        return getCastedValue(Boolean.class,rowToGetValueFrom.getRowData()[2]);
+    }
+
 
     @Override
     protected SqlColumn[] initColumns(boolean tableExistsInDatabase) {

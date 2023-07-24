@@ -4,12 +4,14 @@ import io.curiositycore.thecuriositycore.database.Table;
 import io.curiositycore.thecuriositycore.database.mysql.queries.SqlDataTypes;
 import io.curiositycore.thecuriositycore.database.mysql.queries.SqlQueries;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Abstract class representing the generalisation of a table stored within a database. This class acts as a localised
@@ -30,12 +32,16 @@ public abstract class BaseSqlTable implements Table {
     /**
      * The list of rows within the table.
      */
-    protected List<SqlRow> rowList = new ArrayList<>();
-
     @Getter
+    protected List<SqlRow> rowList = new ArrayList<>();
+    @Getter
+    protected int currentRows = 0;
+
+
     /**
      * The columns within the table, containing both their names and variable types.
      */
+    @Getter
     protected SqlColumn[] columnsInTable ;
 
     /**
@@ -54,13 +60,14 @@ public abstract class BaseSqlTable implements Table {
      */
     protected void initTable(){
         boolean isInDatabase  = SqlQueries.tableExistsInDatabase(this.tableName,this.dataSourceForTable);
-        if(!isInDatabase){
+        if(isInDatabase){
             this.rowList = setRowList();
-            initColumns(false);
+            this.currentRows = rowList.size();
+            initColumns(true);
             return;
         }
         SqlQueries.createNewTable(this.tableName,this.dataSourceForTable);
-        initColumns(true);
+        initColumns(false);
     }
 
     /**
@@ -85,7 +92,7 @@ public abstract class BaseSqlTable implements Table {
         String[] columnNames = getColumnNames();
         SqlDataTypes[] dataTypes = getDataTypes();
         if(!areCorrectDataTypes(rowToAdd,dataTypes)){
-            throw new RuntimeException("The row was not added as it's data types do not match that of the table's" +
+            throw new NoSuchElementException("The row was not added as it's data types do not match that of the table's" +
                     "columns!");
         }
         this.rowList.add(new SqlRow(rowToAdd,this.rowList.size()+1));
@@ -99,10 +106,24 @@ public abstract class BaseSqlTable implements Table {
         SqlQueries.updateRow(this.tableName,dataSourceForTable,rowToUpdate,getColumnNames());
     }
 
-    //TODO This needs to be done when we add the full merge (due to needing other library packages to complete.
+
     @Override
     public void deleteRow(int rowIndex) {
+        SqlQueries.deleteRow(this.tableName,this.dataSourceForTable, rowIndex);
+        try {
+            this.rowList.remove(this.rowList.stream().
+                    filter(sqlRow -> sqlRow.rowIndex == rowIndex).
+                    findFirst().
+                    orElseThrow(NoSuchElementException::new));
 
+            this.currentRows = this.rowList.size();
+            if (currentRows == 0) {
+                SqlQueries.resetIds(this.tableName, this.dataSourceForTable);
+            }
+        }
+        catch(NoSuchElementException noSuchElementException){
+            throw new NoSuchElementException("The row with index: " + rowIndex + " does not exist within the database table!");
+        }
     }
 
 
@@ -111,10 +132,13 @@ public abstract class BaseSqlTable implements Table {
      */
     @Override
     public void updateTableInDataBase() {
-        int databaseTableSize = SqlQueries.getTableSize(this.tableName,this.dataSourceForTable);
-        for(int i = databaseTableSize - this.rowList.size() - 1; i <= this.rowList.size()-1 ; i++)
-        SqlQueries.insertValuesIntoTable(this.tableName,
+
+        for(int i = this.currentRows; i <= this.rowList.size()-1 ; i++){
+            SqlQueries.insertValuesIntoTable(this.tableName,
                                          this.dataSourceForTable, getColumnNames(), this.rowList.get(i).getRowData());
+        }
+        this.currentRows = this.rowList.size();
+
     }
 
 
@@ -182,7 +206,7 @@ public abstract class BaseSqlTable implements Table {
      * Gets the names of each column in this table.
      * @return The names of each column in this table.
      */
-    private String[] getColumnNames(){
+    protected String[] getColumnNames(){
         return Arrays.stream(this.columnsInTable).map(SqlColumn::getColumnName).toArray(String[]::new);
     }
 
@@ -190,7 +214,7 @@ public abstract class BaseSqlTable implements Table {
      * Gets the data types of each column in this table.
      * @return The data types of each column in this table.
      */
-    private SqlDataTypes[] getDataTypes(){
+    protected SqlDataTypes[] getDataTypes(){
         return Arrays.stream(this.columnsInTable).map(SqlColumn::getDataType).toArray(SqlDataTypes[]::new);
     }
 
@@ -201,9 +225,9 @@ public abstract class BaseSqlTable implements Table {
      * @param columnTypes The data types of each column within the table.
      * @return True if the value's data types match that of the columns, false if they do not.
      */
-    private boolean areCorrectDataTypes(Object[] valuesToCheck, SqlDataTypes[] columnTypes ){
+    protected boolean areCorrectDataTypes(Object[] valuesToCheck, SqlDataTypes[] columnTypes ){
 
-        for(int i = 0; i <=valuesToCheck.length; i++){
+        for(int i = 0; i <=valuesToCheck.length-1; i++){
             Class<?> classOfDataType = columnTypes[i].getTypeClass();
             if (!classOfDataType.isInstance(valuesToCheck[i])) {
                 return false;
@@ -211,4 +235,31 @@ public abstract class BaseSqlTable implements Table {
         }
         return true;
     }
+
+    /**
+     * Gets the cast value of the Sql row. This functionality is cruical to ensure correct retreival of data from
+     * database rows.
+     * @param clazz The class of the value to retrieve.
+     * @param object The object to be cast.
+     * @return The cast value of the retrieved row data.
+     * @param <T> The generic of the class of the object to retrieve.
+     */
+    protected<T> T getCastedValue(Class<T> clazz, Object object){
+        if(clazz.isInstance(object)){
+            return clazz.cast(object);
+        }
+        return null;
+    }
+
+    /**
+     * Gets the row within the sqlRow field, based on the row's index.
+     * @param rowIndex The index of the row to retrieve.
+     * @return The SqlRow to retrieve.
+     */
+    protected SqlRow getRowBaseOnIndex(int rowIndex){
+        return this.getRowList().stream().filter(sqlRow -> sqlRow.getRowIndex() == rowIndex).
+                findFirst().
+                orElseThrow(NoSuchElementException::new);
+    }
+
 }
