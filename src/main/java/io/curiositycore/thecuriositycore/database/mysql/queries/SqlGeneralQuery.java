@@ -23,7 +23,31 @@ public enum SqlGeneralQuery {
      * Inserts a new value into a table within a database. Requires a "Table name" , "List of valueIds" and "list of
      * values" for the query to successfully execute.
      */
-    INSERT_TABLE_VALUE("INSERT INTO %s (%s) VALUES (%s)");
+    INSERT_TABLE_VALUE("INSERT INTO %s (%s) VALUES (%s)"),
+    /**
+     * Update the row of a table. Usually done for plugins where the data of a row is subject to change (such as the
+     * name of a land claim for example). Requires the table name, placeholders for the parameters to change, and the
+     * id of the row.
+     */
+    UPDATE_ROW("UPDATE %s SET %s WHERE %s"),
+    /**
+     * Delete the row of a table. Requires the table name and the index id of the row to delete..
+     */
+    DELETE_ROW("DELETE FROM %s WHERE id = %s"),
+    /**
+     * Resets the Index IDs to 1, usually called when a table has 0 rows after a deletion event. requires the table name.
+     */
+    RESET_ID_INCREMENTS("ALTER TABLE %s AUTO_INCREMENT  = 1"),
+
+    /**
+     * Gets all the data within a specific table. Is used typically onEnable as part of the checks for pre-existing
+     * tables. Requires the name of the table.
+     */
+    GET_ALL_TABLE_DATA("SELECT * from %s"),
+    /**
+     * Get all the rows of a table within a database. Requires the name of the table.
+     */
+    GET_TABLE_ROWS("SELECT * FROM %s");
 
     /**
      * The string required to perform the sql query, with parameter placeholders to be formatted by other classes.
