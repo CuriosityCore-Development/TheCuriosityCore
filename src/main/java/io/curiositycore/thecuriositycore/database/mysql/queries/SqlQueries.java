@@ -148,7 +148,7 @@ public class SqlQueries {
 
             while (resultSet.next()) {
                 Object[] row = new Object[columnCount];
-                for (int i = 1; i <= columnCount; i++) {
+                for (int i = 2; i <= columnCount; i++) {
                     row[i - 1] = resultSet.getObject(i);
                 }
                 resultList.add(row);
