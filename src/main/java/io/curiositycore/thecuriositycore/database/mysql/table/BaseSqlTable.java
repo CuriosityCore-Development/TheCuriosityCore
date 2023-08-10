@@ -4,14 +4,12 @@ import io.curiositycore.thecuriositycore.database.Table;
 import io.curiositycore.thecuriositycore.database.mysql.queries.SqlDataTypes;
 import io.curiositycore.thecuriositycore.database.mysql.queries.SqlQueries;
 import lombok.Getter;
+
 import org.bukkit.Bukkit;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
  * Abstract class representing the generalisation of a table stored within a database. This class acts as a localised
@@ -35,6 +33,10 @@ public abstract class BaseSqlTable implements Table {
      */
     @Getter
     protected List<SqlRow> rowList = new ArrayList<>();
+    /**
+     * A set that contains rows awaiting addition to the MySql database for this table.
+     */
+    protected Set<SqlRow> newRowCache =  new HashSet<>();
     @Getter
     protected int currentRows = 0;
 
@@ -89,22 +91,42 @@ public abstract class BaseSqlTable implements Table {
     }
 
     @Override
-    public void insertRow(Object[] rowToAdd) {
-        String[] columnNames = getColumnNames();
+    public void insertRow(Object[] rowData) {
+
         SqlDataTypes[] dataTypes = getDataTypes();
-        if(!areCorrectDataTypes(rowToAdd,dataTypes)){
+        if(!areCorrectDataTypes(rowData,dataTypes)){
             throw new NoSuchElementException("The row was not added as it's data types do not match that of the table's" +
                     "columns!");
         }
-        this.rowList.add(new SqlRow(rowToAdd,this.rowList.size()+1));
+        SqlRow sqlRowToAdd = new SqlRow(rowData, this
+                .rowList
+                .stream()
+                .map(SqlRow::getRowIndex)
+                .max(Comparator.naturalOrder())
+                .orElse(0)+1
+        );
+        this.rowList.add(sqlRowToAdd);
+        this.newRowCache.add(sqlRowToAdd);
+        this.currentRows = this.rowList.size();
 
     }
 
     @Override
     public void updateRow(int rowIndex, Object[] updatedRow) {
-        SqlRow rowToUpdate = rowList.get(rowIndex-1);
-        rowToUpdate.setRowData(updatedRow);
-        SqlQueries.updateRow(this.tableName,dataSourceForTable,rowToUpdate,getColumnNames());
+        try {
+            SqlRow rowToUpdate = rowList
+                    .stream()
+                    .filter(sqlRow -> sqlRow.getRowIndex() == rowIndex)
+                    .findFirst()
+                    .orElseThrow();
+
+            rowToUpdate.setRowData(updatedRow);
+            SqlQueries.updateRow(this.tableName, dataSourceForTable, rowToUpdate, getColumnNames());
+        }
+        catch(NoSuchElementException noSuchElementException){
+            Bukkit.getLogger().warning("No row within the table: " +
+                                             this.tableName + " was found with index: " + rowIndex);
+        }
     }
 
 
@@ -116,6 +138,8 @@ public abstract class BaseSqlTable implements Table {
                     filter(sqlRow -> sqlRow.rowIndex == rowIndex).
                     findFirst().
                     orElseThrow(NoSuchElementException::new));
+
+
 
             this.currentRows = this.rowList.size();
             if (currentRows == 0) {
@@ -133,13 +157,8 @@ public abstract class BaseSqlTable implements Table {
      */
     @Override
     public void updateTableInDataBase() {
-
-        for(int i = this.currentRows; i <= this.rowList.size()-1 ; i++){
-            SqlQueries.insertValuesIntoTable(this.tableName,
-                                         this.dataSourceForTable, getColumnNames(), this.rowList.get(i).getRowData());
-        }
-        this.currentRows = this.rowList.size();
-
+        this.newRowCache.forEach(rowToAdd -> SqlQueries.insertValuesIntoTable(this.tableName,
+                this.dataSourceForTable, getColumnNames(), rowToAdd.getRowData()));
     }
 
 
