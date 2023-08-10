@@ -37,6 +37,10 @@ public abstract class BaseSqlTable implements Table {
      * A set that contains rows awaiting addition to the MySql database for this table.
      */
     protected Set<SqlRow> newRowCache =  new HashSet<>();
+    /**
+     * A set that contains rows awaiting deletion from the MySql database for this table.
+     */
+    protected Set<SqlRow> rowsToDeleteCache = new HashSet<>();
     @Getter
     protected int currentRows = 0;
 
@@ -132,19 +136,24 @@ public abstract class BaseSqlTable implements Table {
 
     @Override
     public void deleteRow(int rowIndex) {
-        SqlQueries.deleteRow(this.tableName,this.dataSourceForTable, rowIndex);
         try {
+            if(this.newRowCache.stream().noneMatch(sqlrow-> sqlrow.getRowIndex() == rowIndex)){
+                this.newRowCache.remove(this.newRowCache.stream().
+                        filter(sqlRow -> sqlRow.rowIndex == rowIndex).
+                        findFirst().
+                        orElseThrow(NoSuchElementException::new));
+            }
+            SqlQueries.deleteRow(this.tableName,this.dataSourceForTable, rowIndex);
             this.rowList.remove(this.rowList.stream().
                     filter(sqlRow -> sqlRow.rowIndex == rowIndex).
                     findFirst().
                     orElseThrow(NoSuchElementException::new));
 
-
-
             this.currentRows = this.rowList.size();
             if (currentRows == 0) {
                 SqlQueries.resetIds(this.tableName, this.dataSourceForTable);
             }
+
         }
         catch(NoSuchElementException noSuchElementException){
             throw new NoSuchElementException("The row with index: " + rowIndex + " does not exist within the database table!");

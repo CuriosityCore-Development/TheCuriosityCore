@@ -169,6 +169,7 @@ public class SqlQueries {
         try(Connection connection = dataSource.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(statement)){
             preparedStatement.executeUpdate();
+            Bukkit.getLogger().info("Database update! Statement: " + statement);
         }
         catch (SQLException e) {
             e.printStackTrace();

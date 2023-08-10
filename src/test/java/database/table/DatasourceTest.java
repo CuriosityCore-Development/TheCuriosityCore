@@ -26,6 +26,6 @@ public class DatasourceTest extends SqlSourceInit {
 
     @Override
     protected String setPassword(FileConfiguration configurationFile) {
-        return "447568c3fe";
+        return "e64f612736";
     }
 }
