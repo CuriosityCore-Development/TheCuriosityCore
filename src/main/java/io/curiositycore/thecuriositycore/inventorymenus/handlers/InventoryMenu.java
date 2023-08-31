@@ -27,7 +27,7 @@ public abstract class InventoryMenu implements InventoryMenuHandler{
     /**
      * Map of inventory slot keys and inventory button values.
      */
-    protected final Map<Integer, BaseInventoryButton> buttonMap = getInventoryPalette().getInventoryButtonMap();
+    protected Map<Integer, BaseInventoryButton> buttonMap = getInventoryPalette().getInventoryButtonMap();
 
     /**
      * Constructor which creates the initial inventory for the menu instance.
