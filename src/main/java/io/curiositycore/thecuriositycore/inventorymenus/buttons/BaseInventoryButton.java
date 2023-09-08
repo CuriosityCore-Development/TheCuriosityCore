@@ -14,12 +14,12 @@ import java.util.List;
  *
  * The button can not be taken, only pressed (with the pickup attempt being canceled on click).
  */
-public abstract class BaseInventoryButton implements InventoryButton{
+public abstract class BaseInventoryButton implements InventoryButton {
     /**
      * The icon of the button (just the itemstack within the slot of the inventory)
      */
     @Getter
-    ItemStack buttonIcon;
+    private ItemStack buttonIcon;
 
     /**
      * Constructor that initialises the button.

@@ -24,4 +24,9 @@ public interface InventoryHandler {
      * Handles inventory close events.
      */
     void onClose();
+
+    /**
+     * Initializes the inventory handler (creating the inventory and its functionality).
+     */
+    void initialize();
 }

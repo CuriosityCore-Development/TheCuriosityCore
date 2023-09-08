@@ -2,8 +2,6 @@ package io.curiositycore.thecuriositycore.inventorymenus.palette;
 
 import io.curiositycore.thecuriositycore.inventorymenus.buttons.BaseInventoryButton;
 
-import lombok.Getter;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,8 +17,12 @@ public abstract class BaseInventoryPalette implements InventoryPalette {
      * The map of inventory buttons being utilised within the linked custom inventory. The keys represent the slot
      * number of the respective button.
      */
-    @Getter
     protected Map<Integer,BaseInventoryButton> inventoryButtonMap = initButtonMap();
+
+    @Override
+    public Map<Integer, BaseInventoryButton> getMenuLayoutMap() {
+        return this.inventoryButtonMap;
+    }
 
     /**
      * Initialises the button map by utilising the button palette.
@@ -32,7 +34,7 @@ public abstract class BaseInventoryPalette implements InventoryPalette {
         int currentRow = 0;
         int rowIndex;
 
-        for(int[] inventoryRow : getInventoryArray()){
+        for(int[] inventoryRow : getButtonIdArray()){
             rowIndex = 0;
             for(Integer buttonNumber : inventoryRow){
                 buttonMap.put((currentRow*9) + rowIndex,buttonPalette[buttonNumber]);
@@ -47,7 +49,7 @@ public abstract class BaseInventoryPalette implements InventoryPalette {
      * Gets the inventory array for this palette. Used to represent what buttons should be placed in which slot.
      * @return The inventory array for the palette.
      */
-    protected abstract int[][] getInventoryArray();
+    protected abstract int[][] getButtonIdArray();
 
     /**
      * Get the array of buttons being utilised within this palette. The indexes for the array are used for the
@@ -55,6 +57,7 @@ public abstract class BaseInventoryPalette implements InventoryPalette {
      * @return The palette of buttons.
      */
     protected abstract BaseInventoryButton[] getButtonPalette();
+
 
 
 }

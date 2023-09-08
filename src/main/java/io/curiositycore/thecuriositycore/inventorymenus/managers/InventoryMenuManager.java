@@ -19,6 +19,7 @@ public class InventoryMenuManager extends BaseCustomInventoryManager{
      */
     @Override
     public void registerHandledInventory(Inventory inventory, InventoryHandler inventoryMenuToRegister) {
+        inventoryMenuToRegister.initialize();
         this.activeInventoryMap.put(inventory,inventoryMenuToRegister);
     }
 

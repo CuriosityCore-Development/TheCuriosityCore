@@ -1,7 +1,7 @@
 package io.curiositycore.thecuriositycore.inventorymenus.handlers;
 
 import io.curiositycore.thecuriositycore.inventorymenus.buttons.BaseInventoryButton;
-import io.curiositycore.thecuriositycore.inventorymenus.buttons.InventoryActionButton;
+import io.curiositycore.thecuriositycore.inventorymenus.buttons.actions.FunctionalButton;
 import io.curiositycore.thecuriositycore.inventorymenus.palette.BaseInventoryPalette;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
@@ -23,21 +23,17 @@ public abstract class InventoryMenu implements InventoryMenuHandler{
      * The inventory that is to be produced for this menu.
      */
     @Getter
-    protected final Inventory inventory;
+    protected Inventory inventory;
     /**
      * Map of inventory slot keys and inventory button values.
      */
-    protected Map<Integer, BaseInventoryButton> buttonMap = getInventoryPalette().getInventoryButtonMap();
+    protected Map<Integer, BaseInventoryButton> buttonMap = getInventoryPalette().getMenuLayoutMap();
 
-    /**
-     * Constructor which creates the initial inventory for the menu instance.
-     */
-    protected InventoryMenu(){
-
-        this.inventory = createInventory();
+    @Override
+    public void initialize(){
+        createInventory();
         decorate();
     }
-
     /**
      * Handles click events for the menu's inventory. Functionality is determined by the button that was clicked.
      * @param slot Inventory slot clicked.
@@ -46,10 +42,10 @@ public abstract class InventoryMenu implements InventoryMenuHandler{
     @Override
     public void onClick(int slot, @NotNull HumanEntity whoClicked) {
         BaseInventoryButton buttonClicked = this.buttonMap.get(slot);
-        if(!(buttonClicked instanceof InventoryActionButton actionButton)){
+        if(!(buttonClicked instanceof FunctionalButton functionalButton)){
             return;
         }
-        actionButton.activateButton((Player) whoClicked);
+        functionalButton.activateButton((Player) whoClicked);
     }
 
     /**
