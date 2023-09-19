@@ -1,0 +1,1 @@
+package io.curiositycore.thecuriositycore.database.util.exceptions;

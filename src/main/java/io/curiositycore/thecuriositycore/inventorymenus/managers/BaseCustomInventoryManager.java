@@ -5,7 +5,7 @@ import org.bukkit.inventory.Inventory;
 
 import java.util.HashMap;
 import java.util.Map;
-/**
+ /**
  * Abstract class that represents the generalisation of a manager responsible for the functionality, manipulation and
  * retrieval of custom inventories within a plugin.
  */
